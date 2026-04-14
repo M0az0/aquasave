@@ -1,0 +1,67 @@
+# ╔══════════════════════════════════════════════════════╗
+# ║  AquaSave — GitHub Pages Deployment Workflow         ║
+# ║  Triggers: push to main branch                       ║
+# ╚══════════════════════════════════════════════════════╝
+
+name: Deploy AquaSave to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  # Allow manual trigger from the GitHub Actions tab
+  workflow_dispatch:
+
+# Grant write permission to publish to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one concurrent deployment; cancel in-progress runs
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # ── Build & Upload ────────────────────────────────────
+  build:
+    name: Build Site
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Validate HTML (optional lint)
+        run: |
+          echo "✅ HTML, CSS, JS files present:"
+          ls -lh index.html style.css script.js
+
+      - name: Upload static site as Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload the entire repo root (all static files)
+          path: "."
+
+  # ── Deploy ────────────────────────────────────────────
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Print deployment URL
+        run: |
+          echo "🌊 AquaSave is live at: ${{ steps.deployment.outputs.page_url }}"
