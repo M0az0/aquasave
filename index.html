@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="AquaSave — Championing clean water and sanitation for every human on Earth. Join the movement for UN SDG 6." />
+  <meta name="description" content="AquaSave — A conceptual prototype aligned with UN SDG 6: Clean Water and Sanitation." />
   <title>AquaSave — Clean Water for All</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,17 +12,25 @@
 </head>
 <body>
 
+  <!-- ── SIMULATION ALERT BANNER ── -->
+  <div class="sim-alert" id="simAlert">
+    <span>🔔 <strong>Live Simulation Alert:</strong> Sensor Node #EG-04 detected turbidity spike in Cairo pilot zone — Alert sent to authorities.</span>
+    <button class="sim-alert__close" id="simAlertClose">✕</button>
+  </div>
+
   <!-- ═══════════ NAV ═══════════ -->
   <nav class="nav" id="nav">
     <div class="nav__inner">
       <a href="#" class="nav__logo">
-        <span class="nav__logo-drop"></span>
-        AquaSave
+        <span class="nav__logo-drop"></span>AquaSave
       </a>
       <ul class="nav__links">
         <li><a href="#about">About</a></li>
+        <li><a href="#how">How It Works</a></li>
         <li><a href="#features">Solutions</a></li>
         <li><a href="#impact">Impact</a></li>
+        <li><a href="#casestudy">Case Study</a></li>
+        <li><a href="#team">Team</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
       <a href="#contact" class="btn btn--nav">Get Involved</a>
@@ -32,8 +40,11 @@
     </div>
     <div class="nav__mobile" id="mobileMenu">
       <a href="#about">About</a>
+      <a href="#how">How It Works</a>
       <a href="#features">Solutions</a>
       <a href="#impact">Impact</a>
+      <a href="#casestudy">Case Study</a>
+      <a href="#team">Team</a>
       <a href="#contact">Contact</a>
       <a href="#contact" class="btn btn--nav">Get Involved</a>
     </div>
@@ -48,38 +59,68 @@
       <div class="hero__orb hero__orb--1"></div>
       <div class="hero__orb hero__orb--2"></div>
     </div>
-
     <div class="hero__content reveal">
-      <div class="hero__badge">🌊 UN SDG Goal 6</div>
+      <div class="hero__badge">🌊 UN SDG Goal 6 — Conceptual Prototype</div>
       <h1 class="hero__title">
-        Every Drop<br />
-        <em>Counts.</em><br />
-        Every Life<br />
-        <em>Matters.</em>
+        Every Drop<br /><em>Counts.</em><br />Every Life<br /><em>Matters.</em>
       </h1>
       <p class="hero__sub">
-        AquaSave is a global initiative accelerating universal access to clean water
-        and sanitation — because safe water is not a privilege, it's a human right.
+        AquaSave is a conceptual initiative demonstrating how technology-driven solutions
+        can accelerate universal access to clean water and sanitation — aligned with UN SDG 6.
       </p>
       <div class="hero__cta">
         <a href="#about" class="btn btn--primary">Discover Our Mission</a>
-        <a href="#impact" class="btn btn--ghost">See the Impact</a>
+        <a href="#impact" class="btn btn--ghost">See Simulated Impact</a>
+      </div>
+      <div class="hero__sim-note">
+        ⚠️ All impact figures are based on simulation and pilot modeling scenarios.
       </div>
     </div>
-
     <div class="hero__scroll-hint">
       <span>Scroll</span>
       <div class="hero__scroll-line"></div>
     </div>
-
-    <!-- Floating stat cards -->
     <div class="hero__float hero__float--a reveal-delay-1">
-      <strong>2.2B</strong>
-      <span>People lack safe drinking water</span>
+      <strong>2.2B</strong><span>People lack safe drinking water</span>
     </div>
     <div class="hero__float hero__float--b reveal-delay-2">
-      <strong>4.2B</strong>
-      <span>Live without safe sanitation</span>
+      <strong>4.2B</strong><span>Live without safe sanitation</span>
+    </div>
+  </section>
+
+  <!-- ═══════════ SDG PROGRESS ═══════════ -->
+  <section class="sdg-progress">
+    <div class="container">
+      <div class="sdg-progress__inner reveal">
+        <div class="sdg-progress__label">
+          <span>🎯 UN SDG 6 Global Progress Tracker</span>
+          <span class="sdg-progress__note">Estimated global achievement toward 2030 target (WHO/UNICEF JMP)</span>
+        </div>
+        <div class="sdg-progress__bars">
+          <div class="prog-item">
+            <div class="prog-item__label">
+              <span>Safe Drinking Water Access</span>
+              <span class="prog-item__val" data-val="74">0%</span>
+            </div>
+            <div class="prog-bar"><div class="prog-fill" data-width="74" style="background:linear-gradient(90deg,#0ea5e9,#22d3ee)"></div></div>
+          </div>
+          <div class="prog-item">
+            <div class="prog-item__label">
+              <span>Basic Sanitation Coverage</span>
+              <span class="prog-item__val" data-val="54">0%</span>
+            </div>
+            <div class="prog-bar"><div class="prog-fill" data-width="54" style="background:linear-gradient(90deg,#0369a1,#0ea5e9)"></div></div>
+          </div>
+          <div class="prog-item">
+            <div class="prog-item__label">
+              <span>Open Defecation Elimination</span>
+              <span class="prog-item__val" data-val="61">0%</span>
+            </div>
+            <div class="prog-bar"><div class="prog-fill" data-width="61" style="background:linear-gradient(90deg,#075985,#38bdf8)"></div></div>
+          </div>
+        </div>
+        <p class="sdg-progress__disclaimer">Target: 100% by 2030.</p>
+      </div>
     </div>
   </section>
 
@@ -96,39 +137,74 @@
               <path d="M30 8C30 8 10 28 10 38C10 49 19 58 30 58C41 58 50 49 50 38C50 28 30 8 30 8Z" fill="url(#dropGrad)" />
               <defs>
                 <linearGradient id="dropGrad" x1="30" y1="8" x2="30" y2="58" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#7dd3fc" />
-                  <stop offset="100%" stop-color="#0369a1" />
+                  <stop offset="0%" stop-color="#7dd3fc" /><stop offset="100%" stop-color="#0369a1" />
                 </linearGradient>
               </defs>
             </svg>
           </div>
           <div class="about__sdg-tag">SDG 6</div>
         </div>
-
         <div class="about__text">
           <div class="section__label reveal">Our Foundation</div>
-          <h2 class="section__title reveal">
-            Clean Water &amp;<br />Sanitation for All
-          </h2>
+          <h2 class="section__title reveal">Clean Water &amp;<br />Sanitation for All</h2>
           <p class="about__lead reveal">
-            United Nations Sustainable Development Goal 6 calls on the world to ensure
-            availability and sustainable management of water and sanitation for all people
-            by 2030. AquaSave was born to accelerate that vision.
+            United Nations Sustainable Development Goal 6 calls on the world to ensure availability
+            and sustainable management of water and sanitation for all people by 2030.
           </p>
           <p class="about__body reveal">
             Water scarcity affects more than 40% of the global population. Open defecation,
-            contaminated rivers, and crumbling infrastructure claim hundreds of thousands
-            of lives each year — disproportionately those of women and children in the
-            developing world. We build technology-driven, community-led solutions that
-            close this gap permanently.
+            contaminated rivers, and crumbling infrastructure claim hundreds of thousands of lives
+            each year. AquaSave is a prototype demonstrating how technology-driven, community-led
+            solutions could close this gap permanently.
           </p>
           <div class="about__pills reveal">
-            <span>💧 Access</span>
-            <span>♻️ Conservation</span>
-            <span>🏗️ Infrastructure</span>
-            <span>📊 Data</span>
+            <span>💧 Access</span><span>♻️ Conservation</span>
+            <span>🏗️ Infrastructure</span><span>📊 Data</span>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ HOW IT WORKS ═══════════ -->
+  <section class="how section" id="how">
+    <div class="container">
+      <div class="section__header">
+        <div class="section__label reveal">The System</div>
+        <h2 class="section__title reveal">How AquaSave Works</h2>
+        <p class="section__sub reveal">A four-stage pipeline — from sensor to solution — designed to detect, analyze, alert, and resolve water quality threats.</p>
+      </div>
+      <div class="how__steps">
+        <div class="how__step reveal">
+          <div class="how__step-icon">📡</div>
+          <div class="how__step-num">01</div>
+          <h3>Sensors Collect Data</h3>
+          <p>IoT sensors deployed across wells, pipelines, and watersheds continuously measure pH, turbidity, temperature, and pathogen indicators every 60 seconds.</p>
+        </div>
+        <div class="how__arrow reveal">→</div>
+        <div class="how__step reveal">
+          <div class="how__step-icon">🧠</div>
+          <div class="how__step-num">02</div>
+          <h3>AI Analyzes Quality</h3>
+          <p>A machine learning model processes incoming readings, detects anomalies, and compares against WHO safety thresholds — predicting contamination before it spreads.</p>
+        </div>
+        <div class="how__arrow reveal">→</div>
+        <div class="how__step reveal">
+          <div class="how__step-icon">🔔</div>
+          <div class="how__step-num">03</div>
+          <h3>Alerts Are Sent</h3>
+          <p>When a threshold is breached, instant SMS, email, and dashboard alerts are dispatched to local operators, health ministries, and community coordinators.</p>
+        </div>
+        <div class="how__arrow reveal">→</div>
+        <div class="how__step reveal">
+          <div class="how__step-icon">🏛️</div>
+          <div class="how__step-num">04</div>
+          <h3>Authorities Respond</h3>
+          <p>Response teams are guided by geo-tagged incident reports. Post-incident data feeds back into the model, improving future detection accuracy.</p>
+        </div>
+      </div>
+      <div class="how__sim-badge reveal">
+        ⚙️ This pipeline is a <strong>simulated architecture</strong> based on existing IoT and ML frameworks.
       </div>
     </div>
   </section>
@@ -138,186 +214,316 @@
     <div class="container">
       <div class="section__header">
         <div class="section__label reveal">Our Solutions</div>
-        <h2 class="section__title reveal">
-          How AquaSave<br />Makes Change
-        </h2>
-        <p class="section__sub reveal">
-          Three pillars of action — designed to deliver measurable results in communities
-          that need it most.
-        </p>
+        <h2 class="section__title reveal">How AquaSave<br />Makes Change</h2>
+        <p class="section__sub reveal">Three pillars of action — designed to deliver measurable results.</p>
       </div>
-
       <div class="features__grid">
-
         <div class="feature-card reveal">
           <div class="feature-card__icon">
             <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="1.5"/><path d="M24 12v24M12 24h24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="24" r="6" fill="currentColor" opacity=".15"/></svg>
           </div>
           <span class="feature-card__num">01</span>
           <h3>Smart Water Monitoring</h3>
-          <p>
-            IoT-powered sensor networks deployed in watersheds, wells, and distribution
-            systems deliver real-time quality data — detecting contaminants before
-            they reach homes. Alerts go out instantly to local operators and health
-            authorities, cutting response time by up to 80%.
-          </p>
+          <p>IoT-powered sensor networks deliver real-time quality data — detecting contaminants before they reach homes.</p>
           <ul class="feature-card__list">
             <li>pH, turbidity &amp; pathogen sensing</li>
             <li>Dashboard for local governments</li>
             <li>Predictive maintenance alerts</li>
           </ul>
         </div>
-
         <div class="feature-card feature-card--accent reveal">
           <div class="feature-card__icon">
             <svg viewBox="0 0 48 48" fill="none"><path d="M8 40l8-16 8 8 8-20 8 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="40" cy="10" r="4" fill="currentColor" opacity=".3"/></svg>
           </div>
           <span class="feature-card__num">02</span>
           <h3>Community Rainwater Harvesting</h3>
-          <p>
-            We design and fund low-cost modular rainwater capture systems tailored
-            to local climate patterns. Each system serves up to 500 households and
-            reduces dependency on overdrawn groundwater by 60% while creating local
-            maintenance jobs.
-          </p>
+          <p>Low-cost modular rainwater capture systems tailored to local climate patterns, serving communities sustainably.</p>
           <ul class="feature-card__list">
             <li>Modular rooftop collection units</li>
             <li>Solar-powered filtration</li>
             <li>Community training &amp; ownership</li>
           </ul>
         </div>
-
         <div class="feature-card reveal">
           <div class="feature-card__icon">
             <svg viewBox="0 0 48 48" fill="none"><rect x="6" y="20" width="36" height="22" rx="4" stroke="currentColor" stroke-width="1.5"/><path d="M16 20V14a8 8 0 0116 0v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="31" r="3" fill="currentColor" opacity=".4"/></svg>
           </div>
           <span class="feature-card__num">03</span>
           <h3>Sanitation Infrastructure Grants</h3>
-          <p>
-            Our micro-grant program partners with local NGOs and municipal governments
-            to fund hygienic toilet construction, wastewater treatment, and public
-            hygiene education — prioritising schools and healthcare facilities first.
-          </p>
+          <p>A micro-grant program partnering with local NGOs and municipalities to fund hygienic toilet construction and education.</p>
           <ul class="feature-card__list">
-            <li>Grants from $2 000 – $50 000</li>
+            <li>Grants from $2,000 – $50,000</li>
             <li>Priority for schools &amp; clinics</li>
             <li>Transparent impact reporting</li>
           </ul>
         </div>
-
         <div class="feature-card reveal">
           <div class="feature-card__icon">
             <svg viewBox="0 0 48 48" fill="none"><path d="M24 6L6 16v16l18 10 18-10V16L24 6z" stroke="currentColor" stroke-width="1.5"/><path d="M24 6v36M6 16l18 10 18-10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
           <span class="feature-card__num">04</span>
           <h3>Data-Driven Advocacy</h3>
-          <p>
-            Our open-access Water Equity Index maps access gaps across 120+ countries,
-            giving policymakers, journalists, and civil society the evidence base they
-            need to drive legislative change and attract investment to under-served regions.
-          </p>
+          <p>An open-access Water Equity Index mapping access gaps across countries, giving policymakers evidence to drive change.</p>
           <ul class="feature-card__list">
-            <li>120-country dataset, updated quarterly</li>
+            <li>Multi-country dataset</li>
             <li>Free public API</li>
             <li>Policy brief library</li>
           </ul>
         </div>
-
         <div class="feature-card reveal">
           <div class="feature-card__icon">
             <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="20" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M8 42c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
           <span class="feature-card__num">05</span>
           <h3>Youth Education Programs</h3>
-          <p>
-            We equip the next generation with water literacy — in-school curriculum,
-            teacher training kits, and a youth ambassador network in 34 countries. When
-            children understand water, entire households change their habits.
-          </p>
+          <p>Equipping the next generation with water literacy through curriculum, teacher training, and ambassador networks.</p>
           <ul class="feature-card__list">
-            <li>Curriculum in 18 languages</li>
-            <li>3 400+ trained teachers</li>
-            <li>Youth ambassador network</li>
+            <li>Curriculum in multiple languages</li>
+            <li>Teacher training network</li>
+            <li>Youth ambassador program</li>
           </ul>
         </div>
-
         <div class="feature-card feature-card--cta reveal">
           <div class="feature-card__cta-inner">
             <span class="feature-card__cta-icon">🌍</span>
             <h3>Want to partner<br/>with us?</h3>
-            <p>Whether you're an NGO, government, investor, or individual — there's
-            a role for you in the AquaSave ecosystem.</p>
+            <p>Whether you're an NGO, government, investor, or individual — there's a role for you.</p>
             <a href="#contact" class="btn btn--primary">Let's Talk</a>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
   <!-- ═══════════ IMPACT / STATS ═══════════ -->
   <section class="impact section" id="impact">
-    <div class="impact__bg">
-      <div class="impact__wave"></div>
-    </div>
+    <div class="impact__bg"><div class="impact__wave"></div></div>
     <div class="container">
-      <div class="section__label reveal" style="color:#7dd3fc">Our Progress</div>
-      <h2 class="section__title reveal" style="color:#fff">
-        Real Numbers.<br />Real Lives Changed.
-      </h2>
-
+      <div class="section__label reveal" style="color:#7dd3fc">Simulated Impact</div>
+      <h2 class="section__title reveal" style="color:#fff">Projected Numbers.<br />Potential Lives Changed.</h2>
+      <div class="sim-disclaimer reveal">
+        <span>⚠️</span>
+        <p>These numbers represent <strong>simulated impact</strong> based on pilot modeling and projected deployment scenarios. They are not real-world verified figures.</p>
+      </div>
       <div class="stats__grid">
         <div class="stat-card reveal">
+          <div class="stat-card__sim">simulation</div>
           <div class="stat-card__value" data-target="1400000">0</div>
           <div class="stat-card__unit">people</div>
-          <div class="stat-card__label">Gained clean water access through our programs</div>
+          <div class="stat-card__label">Projected to gain clean water access in pilot scenarios</div>
         </div>
         <div class="stat-card reveal">
+          <div class="stat-card__sim">simulation</div>
           <div class="stat-card__value" data-target="340">0</div>
           <div class="stat-card__unit">communities</div>
-          <div class="stat-card__label">Now equipped with smart monitoring systems</div>
+          <div class="stat-card__label">Modeled deployment of smart monitoring systems</div>
         </div>
         <div class="stat-card reveal">
+          <div class="stat-card__sim">simulation</div>
           <div class="stat-card__value" data-target="62">0</div>
           <div class="stat-card__unit">countries</div>
-          <div class="stat-card__label">Active AquaSave projects running today</div>
+          <div class="stat-card__label">Targeted regions in projected expansion model</div>
         </div>
         <div class="stat-card reveal">
+          <div class="stat-card__sim">simulation</div>
           <div class="stat-card__value" data-target="98">0</div>
           <div class="stat-card__unit">%</div>
-          <div class="stat-card__label">Of installed systems still operational after 5 years</div>
+          <div class="stat-card__label">Projected system reliability based on IoT benchmarks</div>
         </div>
       </div>
-
       <div class="timeline">
-        <h3 class="timeline__title reveal">Our Journey Toward SDG 6 by 2030</h3>
+        <h3 class="timeline__title reveal">Projected Roadmap Toward SDG 6 by 2030</h3>
         <div class="timeline__track">
           <div class="timeline__item reveal">
             <div class="timeline__dot"></div>
-            <div class="timeline__year">2019</div>
-            <div class="timeline__desc">AquaSave founded with a $2M seed grant from the UN Water Fund</div>
-          </div>
-          <div class="timeline__item reveal">
-            <div class="timeline__dot"></div>
-            <div class="timeline__year">2020</div>
-            <div class="timeline__desc">First 50 sensor networks deployed across sub-Saharan Africa</div>
-          </div>
-          <div class="timeline__item reveal">
-            <div class="timeline__dot"></div>
-            <div class="timeline__year">2022</div>
-            <div class="timeline__desc">Reached 500 000 people milestone; expanded to South/Southeast Asia</div>
-          </div>
-          <div class="timeline__item reveal">
-            <div class="timeline__dot"></div>
             <div class="timeline__year">2024</div>
-            <div class="timeline__desc">Surpassed 1.4M beneficiaries; launched open Water Equity Index</div>
+            <div class="timeline__desc">Concept design and pilot architecture finalized</div>
+          </div>
+          <div class="timeline__item reveal">
+            <div class="timeline__dot"></div>
+            <div class="timeline__year">2025</div>
+            <div class="timeline__desc">Prototype deployment in 3 pilot communities</div>
+          </div>
+          <div class="timeline__item reveal">
+            <div class="timeline__dot"></div>
+            <div class="timeline__year">2026</div>
+            <div class="timeline__desc">Scale to 50 communities across 5 countries</div>
+          </div>
+          <div class="timeline__item reveal">
+            <div class="timeline__dot"></div>
+            <div class="timeline__year">2028</div>
+            <div class="timeline__desc">Regional partnerships and Water Equity Index launch</div>
           </div>
           <div class="timeline__item timeline__item--future reveal">
             <div class="timeline__dot"></div>
             <div class="timeline__year">2030</div>
-            <div class="timeline__desc">Target: 10M people with sustainable water access — and counting</div>
+            <div class="timeline__desc">Target: 10M people with sustainable water access</div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ CASE STUDY ═══════════ -->
+  <section class="casestudy section" id="casestudy">
+    <div class="container">
+      <div class="section__label reveal">Pilot Simulation</div>
+      <h2 class="section__title reveal">Case Study: Egypt 🇪🇬</h2>
+      <p class="section__sub reveal" style="max-width:60ch">
+        A simulated deployment scenario modelling how AquaSave could operate in a
+        peri-urban community on the outskirts of Cairo.
+      </p>
+      <div class="case__grid">
+        <div class="case__col reveal">
+          <div class="case__phase case__phase--before">
+            <div class="case__phase-label">📍 Context (Simulated)</div>
+            <h3>Before AquaSave</h3>
+            <ul class="case__list">
+              <li>❌ No water quality monitoring infrastructure</li>
+              <li>❌ Manual testing every 3–4 weeks only</li>
+              <li>❌ Contamination detected days after exposure</li>
+              <li>❌ 68% using unverified water sources</li>
+              <li>❌ High waterborne illness in children under 5</li>
+            </ul>
+          </div>
+        </div>
+        <div class="case__col reveal">
+          <div class="case__phase case__phase--solution">
+            <div class="case__phase-label">⚙️ Solution Applied</div>
+            <h3>AquaSave Intervention</h3>
+            <ul class="case__list">
+              <li>✅ 12 IoT sensor nodes deployed across the network</li>
+              <li>✅ Real-time dashboard for local water authority</li>
+              <li>✅ SMS alert system for 3 response teams</li>
+              <li>✅ Training for 40 hygiene ambassadors</li>
+              <li>✅ Rainwater harvesting unit at central school</li>
+            </ul>
+          </div>
+        </div>
+        <div class="case__col reveal">
+          <div class="case__phase case__phase--after">
+            <div class="case__phase-label">📊 Projected Outcomes (Simulation)</div>
+            <h3>After 12 Months</h3>
+            <ul class="case__list">
+              <li>📈 Detection time: 3 weeks → 4 hours</li>
+              <li>📈 Safe water access: 32% → 81%</li>
+              <li>📈 Response time reduced by ~75%</li>
+              <li>📈 Community water literacy: +60%</li>
+              <li>📈 ~1,200 illness cases potentially avoided</li>
+            </ul>
+            <div class="case__sim-note">
+              ⚠️ All outcomes are <strong>projected estimates</strong> from simulation — not verified field data.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Simulated Map -->
+      <div class="case__map reveal">
+        <div class="case__map-label">🗺️ Simulated Sensor Network — Cairo Pilot Zone</div>
+        <div class="case__map-inner">
+          <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" class="sim-map">
+            <rect width="700" height="320" fill="#071829" rx="16"/>
+            <g stroke="#0ea5e9" stroke-width="0.3" opacity="0.15">
+              <line x1="0" y1="80" x2="700" y2="80"/><line x1="0" y1="160" x2="700" y2="160"/>
+              <line x1="0" y1="240" x2="700" y2="240"/>
+              <line x1="140" y1="0" x2="140" y2="320"/><line x1="280" y1="0" x2="280" y2="320"/>
+              <line x1="420" y1="0" x2="420" y2="320"/><line x1="560" y1="0" x2="560" y2="320"/>
+            </g>
+            <path d="M 80 20 Q 120 80 100 160 Q 90 240 110 310" stroke="#0ea5e9" stroke-width="8" fill="none" opacity="0.4" stroke-linecap="round"/>
+            <text x="60" y="170" fill="#38bdf8" font-size="10" opacity="0.6" font-family="DM Sans,sans-serif">Nile</text>
+            <g stroke="#22d3ee" stroke-width="1" stroke-dasharray="4 3" opacity="0.3">
+              <line x1="350" y1="160" x2="200" y2="100"/><line x1="350" y1="160" x2="280" y2="220"/>
+              <line x1="350" y1="160" x2="450" y2="90"/><line x1="350" y1="160" x2="500" y2="200"/>
+              <line x1="350" y1="160" x2="580" y2="130"/><line x1="350" y1="160" x2="160" y2="180"/>
+              <line x1="350" y1="160" x2="400" y2="260"/><line x1="350" y1="160" x2="610" y2="240"/>
+              <line x1="350" y1="160" x2="230" y2="270"/><line x1="350" y1="160" x2="490" y2="300"/>
+              <line x1="350" y1="160" x2="320" y2="60"/>
+            </g>
+            <circle cx="350" cy="160" r="18" fill="#0ea5e9" opacity="0.2"/>
+            <circle cx="350" cy="160" r="10" fill="#0ea5e9" opacity="0.6"/>
+            <circle cx="350" cy="160" r="4" fill="#fff"/>
+            <text x="358" y="148" fill="#7dd3fc" font-size="9" font-family="DM Sans,sans-serif">HQ</text>
+            <g fill="#22d3ee">
+              <circle cx="200" cy="100" r="7" opacity="0.9"><animate attributeName="r" values="7;9;7" dur="2s" repeatCount="indefinite"/></circle>
+              <circle cx="280" cy="220" r="7" opacity="0.9"><animate attributeName="r" values="7;9;7" dur="2.5s" repeatCount="indefinite"/></circle>
+              <circle cx="580" cy="130" r="7" opacity="0.9"><animate attributeName="r" values="7;9;7" dur="1.8s" repeatCount="indefinite"/></circle>
+              <circle cx="160" cy="180" r="7" opacity="0.9"><animate attributeName="r" values="7;9;7" dur="3s" repeatCount="indefinite"/></circle>
+              <circle cx="610" cy="240" r="7" opacity="0.9"><animate attributeName="r" values="7;9;7" dur="2.2s" repeatCount="indefinite"/></circle>
+              <circle cx="320" cy="60" r="7" opacity="0.9"><animate attributeName="r" values="7;9;7" dur="2.7s" repeatCount="indefinite"/></circle>
+              <circle cx="490" cy="300" r="7" opacity="0.9"><animate attributeName="r" values="7;9;7" dur="1.9s" repeatCount="indefinite"/></circle>
+              <circle cx="230" cy="270" r="7" opacity="0.9"><animate attributeName="r" values="7;9;7" dur="2.4s" repeatCount="indefinite"/></circle>
+              <circle cx="400" cy="260" r="7" opacity="0.9"><animate attributeName="r" values="7;9;7" dur="2.1s" repeatCount="indefinite"/></circle>
+            </g>
+            <circle cx="450" cy="90" r="9" fill="#f87171" opacity="0.9">
+              <animate attributeName="r" values="9;13;9" dur="1s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.9;0.4;0.9" dur="1s" repeatCount="indefinite"/>
+            </circle>
+            <text x="462" y="86" fill="#fca5a5" font-size="9" font-family="DM Sans,sans-serif">⚠ Alert</text>
+            <circle cx="500" cy="200" r="8" fill="#fbbf24" opacity="0.8">
+              <animate attributeName="r" values="8;11;8" dur="1.5s" repeatCount="indefinite"/>
+            </circle>
+            <text x="512" y="196" fill="#fde68a" font-size="9" font-family="DM Sans,sans-serif">⚡ Check</text>
+            <rect x="20" y="270" width="200" height="40" rx="6" fill="rgba(10,37,64,0.9)" stroke="#0ea5e9" stroke-width="0.5"/>
+            <circle cx="35" cy="283" r="5" fill="#22d3ee"/>
+            <text x="46" y="287" fill="#7dd3fc" font-size="9" font-family="DM Sans,sans-serif">Normal</text>
+            <circle cx="100" cy="283" r="5" fill="#fbbf24"/>
+            <text x="111" y="287" fill="#fde68a" font-size="9" font-family="DM Sans,sans-serif">Warning</text>
+            <circle cx="165" cy="283" r="5" fill="#f87171"/>
+            <text x="176" y="287" fill="#fca5a5" font-size="9" font-family="DM Sans,sans-serif">Alert</text>
+            <circle cx="35" cy="300" r="5" fill="#0ea5e9"/>
+            <text x="46" y="304" fill="#7dd3fc" font-size="9" font-family="DM Sans,sans-serif">Control Hub — 12 nodes total</text>
+            <text x="350" y="25" text-anchor="middle" fill="#7dd3fc" font-size="12" font-family="DM Sans,sans-serif" font-weight="600">Cairo Pilot Zone — Simulated Sensor Network</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ TEAM ═══════════ -->
+  <section class="team section" id="team">
+    <div class="container">
+      <div class="section__header">
+        <div class="section__label reveal">The People</div>
+        <h2 class="section__title reveal">Our Team</h2>
+        <p class="section__sub reveal">
+          AquaSave is a prototype project. The following roles represent the functional
+          structure of a full deployment team.
+        </p>
+      </div>
+      <div class="team__grid">
+        <div class="team__card reveal">
+          <div class="team__avatar" style="background:linear-gradient(135deg,#0369a1,#0ea5e9)"><span>💧</span></div>
+          <h3>Water Systems Engineer</h3>
+          <p class="team__role">Infrastructure &amp; IoT Deployment</p>
+          <p class="team__desc">Designs and oversees sensor network architecture, pipeline integration, and hardware deployment across pilot zones.</p>
+          <div class="team__proto-badge">Prototype Role</div>
+        </div>
+        <div class="team__card reveal">
+          <div class="team__avatar" style="background:linear-gradient(135deg,#075985,#38bdf8)"><span>📊</span></div>
+          <h3>Data Analyst</h3>
+          <p class="team__role">AI Modeling &amp; Quality Analysis</p>
+          <p class="team__desc">Builds and maintains predictive models for water quality anomaly detection and produces the Water Equity Index reports.</p>
+          <div class="team__proto-badge">Prototype Role</div>
+        </div>
+        <div class="team__card reveal">
+          <div class="team__avatar" style="background:linear-gradient(135deg,#0a2540,#0ea5e9)"><span>🏗️</span></div>
+          <h3>Field Operations Designer</h3>
+          <p class="team__role">Ground Deployment &amp; Logistics</p>
+          <p class="team__desc">Coordinates physical installation, maintenance protocols, and local vendor partnerships in each deployment community.</p>
+          <div class="team__proto-badge">Prototype Role</div>
+        </div>
+        <div class="team__card reveal">
+          <div class="team__avatar" style="background:linear-gradient(135deg,#164e63,#22d3ee)"><span>🤝</span></div>
+          <h3>Community Outreach Coordinator</h3>
+          <p class="team__role">Education &amp; Stakeholder Engagement</p>
+          <p class="team__desc">Leads hygiene ambassador training, school programs, and builds trust with local governments and NGO partners.</p>
+          <div class="team__proto-badge">Prototype Role</div>
+        </div>
+      </div>
+      <div class="team__note reveal">
+        👥 These are functional roles for the AquaSave prototype — not profiles of real individuals.
+        A real deployment would recruit specialists for each position locally and internationally.
       </div>
     </div>
   </section>
@@ -326,94 +532,91 @@
   <section class="testimonials section">
     <div class="container">
       <div class="section__label reveal">Voices</div>
-      <h2 class="section__title reveal">What Communities Say</h2>
-
+      <h2 class="section__title reveal">Community Perspectives</h2>
+      <p class="section__sub reveal">Illustrative quotes representing the human impact of clean water access.</p>
       <div class="testimonials__grid">
         <div class="testimonial reveal">
           <div class="testimonial__quote">"</div>
-          <p>Before AquaSave, my daughters walked four hours each day to fetch water.
-             Now the well is 200 metres away and we can actually test the quality ourselves.
-             My girls go to school every day now.</p>
+          <p>Before the monitoring system, my daughters walked four hours each day to fetch water. Now the well is nearby and we can test the quality ourselves.</p>
           <div class="testimonial__author">
             <div class="testimonial__avatar" style="background:#0284c7">AM</div>
-            <div>
-              <strong>Amina M.</strong>
-              <span>Northern Nigeria</span>
-            </div>
+            <div><strong>Amina M.</strong><span>Community Member — Pilot Scenario</span></div>
           </div>
         </div>
         <div class="testimonial reveal">
           <div class="testimonial__quote">"</div>
-          <p>The sensor dashboard helped us detect a cholera-risk contamination event
-             72 hours before it would have reached our distribution network. We estimate
-             it prevented over 2 000 cases.</p>
+          <p>The sensor dashboard helped detect a contamination event 72 hours before it would have reached the distribution network — potentially preventing thousands of cases.</p>
           <div class="testimonial__author">
             <div class="testimonial__avatar" style="background:#0369a1">DR</div>
-            <div>
-              <strong>Dr. Rajan P.</strong>
-              <span>Municipal Water Authority, India</span>
-            </div>
+            <div><strong>Dr. Rajan P.</strong><span>Water Authority — Simulated Scenario</span></div>
           </div>
         </div>
         <div class="testimonial reveal">
           <div class="testimonial__quote">"</div>
-          <p>The micro-grant process was transparent and respectful. Within eight months
-             we had working toilets in all three schools and trained 45 hygiene champions.
-             Real change, real fast.</p>
+          <p>The micro-grant process was transparent and respectful. Within eight months we had working sanitation in all three schools and 45 trained hygiene champions.</p>
           <div class="testimonial__author">
             <div class="testimonial__avatar" style="background:#075985">LK</div>
-            <div>
-              <strong>Léa K.</strong>
-              <span>NGO Director, Senegal</span>
-            </div>
+            <div><strong>Léa K.</strong><span>NGO Director — Pilot Scenario</span></div>
           </div>
+        </div>
+      </div>
+      <p class="testimonials__disclaimer reveal">
+        ⚠️ These testimonials are <strong>illustrative scenarios</strong> representing potential community impact — not verified real-world accounts.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════ DISCLAIMER ═══════════ -->
+  <section class="disclaimer section" id="disclaimer">
+    <div class="container">
+      <div class="disclaimer__box reveal">
+        <div class="disclaimer__icon">⚠️</div>
+        <h2>Project Disclaimer</h2>
+        <p><strong>AquaSave is a conceptual prototype</strong> designed for educational and demonstration purposes, aligned with the United Nations Sustainable Development Goal 6: Clean Water and Sanitation.</p>
+        <div class="disclaimer__items">
+          <div class="disclaimer__item">
+            <span>📊</span>
+            <p>All statistics, impact numbers, and projections are <strong>simulated estimates</strong> based on pilot modeling scenarios — not verified real-world data.</p>
+          </div>
+          <div class="disclaimer__item">
+            <span>👥</span>
+            <p>Team roles, testimonials, and case studies are <strong>illustrative</strong> and represent potential scenarios, not actual individuals or verified events.</p>
+          </div>
+          <div class="disclaimer__item">
+            <span>🗺️</span>
+            <p>Maps and visualizations show <strong>simulated deployment models</strong> and do not represent real infrastructure or active operations.</p>
+          </div>
+          <div class="disclaimer__item">
+            <span>🎓</span>
+            <p>This project was developed as an <strong>academic and educational prototype</strong> to demonstrate how technology can address global water challenges.</p>
+          </div>
+        </div>
+        <div class="disclaimer__sdg">
+          <span>🌐</span>
+          Aligned with the <strong>UN 2030 Agenda for Sustainable Development</strong> — Goal 6: Ensure availability and sustainable management of water and sanitation for all.
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════ CONTACT / FOOTER ═══════════ -->
+  <!-- ═══════════ CONTACT ═══════════ -->
   <section class="contact section" id="contact">
     <div class="container">
       <div class="contact__grid">
         <div class="contact__info">
           <div class="section__label reveal">Get Involved</div>
-          <h2 class="section__title reveal">
-            Join the<br />Water Movement
-          </h2>
-          <p class="reveal">
-            Whether you want to donate, partner, volunteer, or just stay informed —
-            we'd love to hear from you. Every connection creates ripples.
-          </p>
+          <h2 class="section__title reveal">Join the<br />Water Movement</h2>
+          <p class="reveal">Whether you want to contribute, collaborate, or just stay informed — we'd love to hear from you.</p>
           <div class="contact__ways reveal">
-            <div class="contact__way">
-              <span>📩</span>
-              <div>
-                <strong>Email Us</strong>
-                <a href="mailto:hello@aquasave.org">hello@aquasave.org</a>
-              </div>
-            </div>
-            <div class="contact__way">
-              <span>🌐</span>
-              <div>
-                <strong>Follow the data</strong>
-                <a href="#">Water Equity Index →</a>
-              </div>
-            </div>
-            <div class="contact__way">
-              <span>🤝</span>
-              <div>
-                <strong>Partnerships</strong>
-                <a href="mailto:partners@aquasave.org">partners@aquasave.org</a>
-              </div>
-            </div>
+            <div class="contact__way"><span>📩</span><div><strong>Email Us</strong><a href="mailto:hello@aquasave.org">hello@aquasave.org</a></div></div>
+            <div class="contact__way"><span>🌐</span><div><strong>Follow the data</strong><a href="#">Water Equity Index →</a></div></div>
+            <div class="contact__way"><span>🤝</span><div><strong>Partnerships</strong><a href="mailto:partners@aquasave.org">partners@aquasave.org</a></div></div>
           </div>
         </div>
-
         <form class="contact__form reveal" id="contactForm" novalidate>
           <div class="form__group">
             <label for="name">Full Name</label>
-            <input type="text" id="name" name="name" placeholder="Amara Hassan" required />
+            <input type="text" id="name" name="name" placeholder="Your name" required />
           </div>
           <div class="form__group">
             <label for="email">Email Address</label>
@@ -423,7 +626,7 @@
             <label for="role">I want to…</label>
             <select id="role" name="role">
               <option value="">Select an option</option>
-              <option>Donate to a project</option>
+              <option>Contribute to the project</option>
               <option>Partner with AquaSave</option>
               <option>Volunteer my skills</option>
               <option>Learn more / media inquiry</option>
@@ -431,12 +634,10 @@
           </div>
           <div class="form__group">
             <label for="message">Message</label>
-            <textarea id="message" name="message" rows="4" placeholder="Tell us a bit about yourself or your organisation…"></textarea>
+            <textarea id="message" name="message" rows="4" placeholder="Tell us about yourself…"></textarea>
           </div>
           <button type="submit" class="btn btn--primary btn--full">Send Message 🌊</button>
-          <div class="form__success" id="formSuccess">
-            ✅ Thank you! We'll be in touch within 2 business days.
-          </div>
+          <div class="form__success" id="formSuccess">✅ Thank you! We'll be in touch within 2 business days.</div>
         </form>
       </div>
     </div>
@@ -447,11 +648,8 @@
     <div class="container">
       <div class="footer__grid">
         <div class="footer__brand">
-          <div class="nav__logo">
-            <span class="nav__logo-drop"></span>
-            AquaSave
-          </div>
-          <p>Championing UN SDG 6 — Clean Water &amp; Sanitation for every human on Earth by 2030.</p>
+          <div class="nav__logo"><span class="nav__logo-drop"></span>AquaSave</div>
+          <p>A conceptual prototype championing UN SDG 6 — Clean Water &amp; Sanitation for all by 2030.</p>
           <div class="footer__socials">
             <a href="#" aria-label="Twitter">𝕏</a>
             <a href="#" aria-label="LinkedIn">in</a>
@@ -461,27 +659,27 @@
         <div class="footer__col">
           <h4>Initiative</h4>
           <a href="#about">About SDG 6</a>
-          <a href="#features">Our Solutions</a>
-          <a href="#impact">Impact Report</a>
-          <a href="#">Water Equity Index</a>
+          <a href="#how">How It Works</a>
+          <a href="#features">Solutions</a>
+          <a href="#impact">Simulated Impact</a>
         </div>
         <div class="footer__col">
-          <h4>Participate</h4>
-          <a href="#contact">Donate</a>
+          <h4>Project</h4>
+          <a href="#casestudy">Case Study</a>
+          <a href="#team">Our Team</a>
+          <a href="#disclaimer">Disclaimer</a>
+          <a href="#">Open API</a>
+        </div>
+        <div class="footer__col">
+          <h4>Connect</h4>
+          <a href="#contact">Contact</a>
           <a href="#contact">Partner</a>
           <a href="#contact">Volunteer</a>
-          <a href="#">Press Kit</a>
-        </div>
-        <div class="footer__col">
-          <h4>Resources</h4>
-          <a href="#">Policy Briefs</a>
-          <a href="#">Open API</a>
-          <a href="#">Research</a>
           <a href="#">Newsletter</a>
         </div>
       </div>
       <div class="footer__bottom">
-        <span>© 2025 AquaSave Initiative. Made with 💧 for the planet.</span>
+        <span>© 2026 AquaSave Initiative. Made with 💧 for the planet.</span>
         <span>Aligned with UN Sustainable Development Goal 6</span>
       </div>
     </div>
