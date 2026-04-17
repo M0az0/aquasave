@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -22,14 +23,13 @@
   <!-- ══ NAV ══ -->
   <nav class="nav" id="nav">
     <div class="nav__inner">
-      <a href="#" class="nav__logo">
-        <i class="fa-solid fa-droplet"></i> AquaSave
-      </a>
+      <a href="#" class="nav__logo"><i class="fa-solid fa-droplet"></i> AquaSave</a>
       <ul class="nav__links">
         <li><a href="#about">About</a></li>
         <li><a href="#features">Features</a></li>
         <li><a href="#calculator">Calculator</a></li>
         <li><a href="#impact">Impact</a></li>
+        <li><a href="#invisible">Invisible Water</a></li>
         <li><a href="#tips">Tips</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -37,21 +37,21 @@
         <button class="theme-btn" id="themeBtn" title="Toggle theme">
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
-        <a href="#login" class="btn btn--ghost btn--sm">
-          <i class="fa-solid fa-right-to-bracket"></i> Login
+        <!-- FIX 4: Removed login modal → replaced with "My Progress" scroll link -->
+        <a href="#tips" class="btn btn--ghost btn--sm">
+          <i class="fa-solid fa-chart-simple"></i> My Progress
         </a>
         <a href="#calculator" class="btn btn--primary btn--sm">Start Saving Now</a>
       </div>
-      <button class="nav__burger" id="burger">
-        <span></span><span></span><span></span>
-      </button>
+      <button class="nav__burger" id="burger"><span></span><span></span><span></span></button>
     </div>
     <div class="nav__mobile" id="mobileMenu">
-      <a href="#about"><i class="fa-solid fa-circle-info"></i> About</a>
+      <a href="#about"><i class="fa-solid fa-globe"></i> About</a>
       <a href="#features"><i class="fa-solid fa-star"></i> Features</a>
       <a href="#calculator"><i class="fa-solid fa-calculator"></i> Calculator</a>
       <a href="#impact"><i class="fa-solid fa-chart-line"></i> Impact</a>
-      <a href="#tips"><i class="fa-solid fa-lightbulb"></i> Tips</a>
+      <a href="#invisible"><i class="fa-solid fa-eye-slash"></i> Invisible Water</a>
+      <a href="#tips"><i class="fa-solid fa-lightbulb"></i> My Progress</a>
       <a href="#contact"><i class="fa-solid fa-envelope"></i> Contact</a>
       <a href="#calculator" class="btn btn--primary">Start Saving Now</a>
     </div>
@@ -61,21 +61,18 @@
   <section class="hero" id="hero">
     <div class="hero__bg">
       <div class="hero__bubbles">
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
       </div>
       <div class="hero__wave-wrap">
         <svg viewBox="0 0 1440 200" preserveAspectRatio="none" class="hero__svg-wave">
-          <path d="M0,100 C360,180 1080,20 1440,100 L1440,200 L0,200 Z" fill="rgba(14,165,233,0.08)"/>
-          <path d="M0,130 C400,60 1000,180 1440,130 L1440,200 L0,200 Z" fill="rgba(14,165,233,0.05)"/>
+          <path d="M0,100 C360,180 1080,20 1440,100 L1440,200 L0,200 Z" fill="rgba(14,165,233,0.07)"/>
+          <path d="M0,130 C400,60 1000,180 1440,130 L1440,200 L0,200 Z" fill="rgba(14,165,233,0.04)"/>
         </svg>
       </div>
     </div>
     <div class="container">
       <div class="hero__content reveal">
-        <div class="hero__tag">
-          <i class="fa-solid fa-circle-check"></i> Aligned with UN SDG Goal 6
-        </div>
+        <div class="hero__tag"><i class="fa-solid fa-circle-check"></i> Aligned with UN SDG Goal 6</div>
         <h1>Save Water.<br /><span class="gradient-text">Save Life.</span></h1>
         <p class="hero__desc">
           Track your daily water usage, discover how much you waste,
@@ -89,10 +86,11 @@
             <i class="fa-solid fa-circle-play"></i> Learn More
           </a>
         </div>
+        <!-- FIX 2: Starts from realistic number, animates upward -->
         <div class="hero__stats">
           <div class="hero__stat">
-            <strong id="heroSaved">0</strong>
-            <span>Liters Saved Today</span>
+            <strong id="heroSaved">847,320</strong>
+            <span>Liters Saved Today (Simulated)</span>
           </div>
           <div class="hero__stat-divider"></div>
           <div class="hero__stat">
@@ -123,44 +121,44 @@
               <span>SDG 6</span>
             </div>
           </div>
-          <div class="about__badge">
-            <i class="fa-brands fa-uncharted"></i>
-            United Nations Goal
-          </div>
+          <div class="about__badge"><i class="fa-solid fa-earth-africa"></i> United Nations Goal</div>
         </div>
         <div class="about__text">
           <div class="section__label reveal"><i class="fa-solid fa-globe"></i> About SDG 6</div>
           <h2 class="reveal">Clean Water is<br /><span class="gradient-text">Everyone's Right</span></h2>
           <p class="about__lead reveal">
-            SDG 6 aims to ensure the availability and sustainable management
-            of clean water and sanitation for all people by 2030.
+            SDG 6 aims to ensure the availability and sustainable management of clean water
+            and sanitation for all people by 2030.
           </p>
+
+          <!-- PRIORITY 4: Real Human Story -->
+          <div class="about__story reveal">
+            <i class="fa-solid fa-quote-left about__story-quote"></i>
+            <p>
+              In parts of rural Sub-Saharan Africa and Egypt's own western desert communities,
+              women and children walk an average of <strong>6 kilometres daily</strong> to collect water —
+              water that is often contaminated. Every <strong>2 minutes</strong>, a child under 5 dies
+              from a water-related disease. AquaSave exists because this is <em>preventable</em>.
+            </p>
+          </div>
+
           <p class="about__body reveal">
-            Our platform helps individuals understand and reduce their daily
-            water waste through awareness, tracking, and smart tips.
-            When millions of people save a little — the impact is enormous.
+            Our platform helps individuals understand and reduce their daily water waste through
+            awareness, interactive tracking, and smart tips. When millions of people save a
+            little — the impact is enormous.
           </p>
           <div class="about__facts reveal">
             <div class="about__fact">
               <i class="fa-solid fa-triangle-exclamation"></i>
-              <div>
-                <strong>40%</strong>
-                <span>of the world faces water scarcity</span>
-              </div>
+              <div><strong>40%</strong><span>of the world faces water scarcity</span></div>
             </div>
             <div class="about__fact">
               <i class="fa-solid fa-clock"></i>
-              <div>
-                <strong>6 Hours</strong>
-                <span>daily walk for water in some regions</span>
-              </div>
+              <div><strong>6 km</strong><span>daily walk for water in some regions</span></div>
             </div>
             <div class="about__fact">
               <i class="fa-solid fa-hand-holding-droplet"></i>
-              <div>
-                <strong>150L</strong>
-                <span>average daily use per person in cities</span>
-              </div>
+              <div><strong>150L</strong><span>average daily use per city person</span></div>
             </div>
           </div>
         </div>
@@ -177,49 +175,39 @@
         <p class="section__sub reveal">Everything you need to understand, track, and reduce your water footprint.</p>
       </div>
       <div class="features__grid">
-
-        <div class="feature-card reveal" data-delay="0">
-          <div class="feature-card__icon">
-            <i class="fa-solid fa-calculator"></i>
-          </div>
+        <div class="feature-card reveal">
+          <div class="feature-card__icon"><i class="fa-solid fa-calculator"></i></div>
           <h3>Water Usage Calculator</h3>
-          <p>Enter your household size and habits to instantly calculate your daily water consumption — and see exactly where you can cut back.</p>
+          <p>Enter your household details to instantly calculate daily consumption across all activities — with a visual breakdown chart.</p>
           <ul class="feature-card__list">
-            <li><i class="fa-solid fa-check"></i> Household-based calculation</li>
-            <li><i class="fa-solid fa-check"></i> Activity-level inputs</li>
-            <li><i class="fa-solid fa-check"></i> Instant results with savings plan</li>
+            <li><i class="fa-solid fa-check"></i> 6-category household inputs</li>
+            <li><i class="fa-solid fa-check"></i> Visual doughnut chart results</li>
+            <li><i class="fa-solid fa-check"></i> Country comparison + Pledge system</li>
           </ul>
           <a href="#calculator" class="feature-card__cta">Try Calculator <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-
-        <div class="feature-card feature-card--accent reveal" data-delay="1">
-          <div class="feature-card__icon">
-            <i class="fa-solid fa-chart-line"></i>
-          </div>
+        <div class="feature-card feature-card--accent reveal">
+          <div class="feature-card__icon"><i class="fa-solid fa-chart-line"></i></div>
           <h3>Track Your Savings</h3>
-          <p>Every drop saved is recorded. Watch your conservation grow over days, weeks, and months — and see the collective impact you're making.</p>
+          <p>Every drop saved is recorded. Watch your conservation grow — and see the real-world human impact you're making daily.</p>
           <ul class="feature-card__list">
-            <li><i class="fa-solid fa-check"></i> Visual progress tracking</li>
-            <li><i class="fa-solid fa-check"></i> Daily & weekly summaries</li>
-            <li><i class="fa-solid fa-check"></i> CO₂ equivalent saved</li>
+            <li><i class="fa-solid fa-check"></i> Persistent habit tracker</li>
+            <li><i class="fa-solid fa-check"></i> Shareable results card</li>
+            <li><i class="fa-solid fa-check"></i> CO₂ equivalent visualised</li>
           </ul>
           <a href="#impact" class="feature-card__cta">View Impact <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-
-        <div class="feature-card reveal" data-delay="2">
-          <div class="feature-card__icon">
-            <i class="fa-solid fa-brain"></i>
-          </div>
+        <div class="feature-card reveal">
+          <div class="feature-card__icon"><i class="fa-solid fa-brain"></i></div>
           <h3>Smart Daily Tips</h3>
-          <p>Receive personalized, science-backed water conservation tips every day — small changes that add up to thousands of liters saved over a year.</p>
+          <p>Science-backed water conservation tips you can mark complete. Your score persists between visits as a real habit tracker.</p>
           <ul class="feature-card__list">
-            <li><i class="fa-solid fa-check"></i> Personalized to your habits</li>
-            <li><i class="fa-solid fa-check"></i> Science-backed advice</li>
-            <li><i class="fa-solid fa-check"></i> Easy to implement today</li>
+            <li><i class="fa-solid fa-check"></i> Persistent conservation score</li>
+            <li><i class="fa-solid fa-check"></i> 6 actionable daily habits</li>
+            <li><i class="fa-solid fa-check"></i> Savings estimate per tip</li>
           </ul>
-          <a href="#tips" class="feature-card__cta">See Tips <i class="fa-solid fa-arrow-right"></i></a>
+          <a href="#tips" class="feature-card__cta">See My Progress <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-
       </div>
     </div>
   </section>
@@ -230,10 +218,11 @@
       <div class="section__header">
         <div class="section__label reveal"><i class="fa-solid fa-calculator"></i> Interactive Tool</div>
         <h2 class="reveal">Water Usage<br /><span class="gradient-text">Calculator</span></h2>
-        <p class="section__sub reveal">Find out how much water your household uses daily — and how much you could save.</p>
+        <p class="section__sub reveal">Six categories, scientifically-weighted — find out exactly where your water goes.</p>
       </div>
 
       <div class="calc__card reveal">
+        <!-- INPUTS -->
         <div class="calc__inputs">
           <h3><i class="fa-solid fa-house"></i> Your Household</h3>
 
@@ -249,30 +238,61 @@
           <div class="calc__field">
             <label><i class="fa-solid fa-shower"></i> Daily Shower Duration</label>
             <div class="calc__select-row">
-              <button class="select-btn active" data-shower="5">5 min</button>
-              <button class="select-btn" data-shower="10">10 min</button>
-              <button class="select-btn" data-shower="15">15 min</button>
-              <button class="select-btn" data-shower="20">20+ min</button>
+              <button class="select-btn active" data-group="shower" data-val="5">5 min</button>
+              <button class="select-btn" data-group="shower" data-val="10">10 min</button>
+              <button class="select-btn" data-group="shower" data-val="15">15 min</button>
+              <button class="select-btn" data-group="shower" data-val="20">20+ min</button>
             </div>
           </div>
 
           <div class="calc__field">
-            <label><i class="fa-solid fa-toilet"></i> Toilet Flushes per Day (per person)</label>
+            <label><i class="fa-solid fa-toilet"></i> Toilet Flushes / Day (per person)</label>
             <div class="calc__select-row">
-              <button class="select-btn active" data-flush="3">3×</button>
-              <button class="select-btn" data-flush="5">5×</button>
-              <button class="select-btn" data-flush="7">7×</button>
-              <button class="select-btn" data-flush="10">10+×</button>
+              <button class="select-btn active" data-group="flush" data-val="3">3×</button>
+              <button class="select-btn" data-group="flush" data-val="5">5×</button>
+              <button class="select-btn" data-group="flush" data-val="7">7×</button>
+              <button class="select-btn" data-group="flush" data-val="10">10+×</button>
             </div>
           </div>
 
           <div class="calc__field">
-            <label><i class="fa-solid fa-utensils"></i> Cooking & Drinking Habits</label>
+            <label><i class="fa-solid fa-utensils"></i> Cooking &amp; Drinking Habits</label>
             <div class="calc__select-row">
-              <button class="select-btn active" data-cook="low">Light</button>
-              <button class="select-btn" data-cook="medium">Average</button>
-              <button class="select-btn" data-cook="high">Heavy</button>
+              <button class="select-btn active" data-group="cook" data-val="15">Light</button>
+              <button class="select-btn" data-group="cook" data-val="25">Average</button>
+              <button class="select-btn" data-group="cook" data-val="40">Heavy</button>
             </div>
+          </div>
+
+          <!-- PRIORITY 2A: New fields -->
+          <div class="calc__field">
+            <label><i class="fa-solid fa-shirt"></i> Laundry Loads / Week</label>
+            <div class="calc__select-row">
+              <button class="select-btn active" data-group="laundry" data-val="0">None</button>
+              <button class="select-btn" data-group="laundry" data-val="35">1–2</button>
+              <button class="select-btn" data-group="laundry" data-val="70">3–4</button>
+              <button class="select-btn" data-group="laundry" data-val="120">5+</button>
+            </div>
+            <div class="calc__hint">Each machine load ≈ 70L · spread over 7 days</div>
+          </div>
+
+          <div class="calc__field">
+            <label><i class="fa-solid fa-plate-wheat"></i> Dishwashing Method</label>
+            <div class="calc__select-row">
+              <button class="select-btn active" data-group="dishes" data-val="20">Handwash</button>
+              <button class="select-btn" data-group="dishes" data-val="10">Machine</button>
+            </div>
+            <div class="calc__hint">Per person per day average</div>
+          </div>
+
+          <div class="calc__field">
+            <label><i class="fa-solid fa-seedling"></i> Garden / Car Washing</label>
+            <div class="calc__select-row">
+              <button class="select-btn active" data-group="outdoor" data-val="0">Never</button>
+              <button class="select-btn" data-group="outdoor" data-val="20">Sometimes</button>
+              <button class="select-btn" data-group="outdoor" data-val="60">Daily</button>
+            </div>
+            <div class="calc__hint">Per household per day average</div>
           </div>
 
           <button class="btn btn--primary btn--full btn--ripple calc__btn" id="calcBtn">
@@ -280,71 +300,66 @@
           </button>
         </div>
 
+        <!-- RESULTS -->
         <div class="calc__results" id="calcResults">
           <div class="calc__results-placeholder" id="calcPlaceholder">
             <i class="fa-solid fa-droplet"></i>
             <p>Fill in your details and press <strong>Calculate</strong> to see your results.</p>
           </div>
           <div class="calc__results-content hidden" id="calcContent">
-            <div class="calc__gauge-wrap">
-              <svg class="calc__gauge" viewBox="0 0 200 120">
-                <path d="M20,110 A90,90 0 0,1 180,110" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="18" stroke-linecap="round"/>
-                <path d="M20,110 A90,90 0 0,1 180,110" fill="none" stroke="url(#gaugeGrad)" stroke-width="18" stroke-linecap="round"
-                      stroke-dasharray="283" stroke-dashoffset="283" id="gaugeFill"/>
-                <defs>
-                  <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stop-color="#22d3ee"/>
-                    <stop offset="50%" stop-color="#0ea5e9"/>
-                    <stop offset="100%" stop-color="#f87171"/>
-                  </linearGradient>
-                </defs>
-                <text x="100" y="90" text-anchor="middle" class="gauge-val" id="gaugeVal">0</text>
-                <text x="100" y="108" text-anchor="middle" class="gauge-label">Liters / Day</text>
-              </svg>
+
+            <!-- PRIORITY 2B: Doughnut chart -->
+            <div class="calc__chart-wrap">
+              <canvas id="usageChart" width="220" height="220"></canvas>
+              <div class="calc__chart-center">
+                <span id="chartTotal">0</span>
+                <small>L/day</small>
+              </div>
             </div>
 
             <div class="calc__breakdown">
-              <div class="calc__row">
-                <span><i class="fa-solid fa-shower"></i> Showers</span>
-                <strong id="rShower">—</strong>
-              </div>
-              <div class="calc__row">
-                <span><i class="fa-solid fa-toilet"></i> Toilet</span>
-                <strong id="rToilet">—</strong>
-              </div>
-              <div class="calc__row">
-                <span><i class="fa-solid fa-utensils"></i> Cooking & Drinking</span>
-                <strong id="rCook">—</strong>
-              </div>
+              <div class="calc__row"><span><i class="fa-solid fa-shower"></i> Showers</span><strong id="rShower">—</strong></div>
+              <div class="calc__row"><span><i class="fa-solid fa-toilet"></i> Toilet</span><strong id="rToilet">—</strong></div>
+              <div class="calc__row"><span><i class="fa-solid fa-utensils"></i> Cooking</span><strong id="rCook">—</strong></div>
+              <div class="calc__row"><span><i class="fa-solid fa-shirt"></i> Laundry</span><strong id="rLaundry">—</strong></div>
+              <div class="calc__row"><span><i class="fa-solid fa-plate-wheat"></i> Dishwashing</span><strong id="rDishes">—</strong></div>
+              <div class="calc__row"><span><i class="fa-solid fa-seedling"></i> Outdoor</span><strong id="rOutdoor">—</strong></div>
               <div class="calc__row calc__row--total">
                 <span><i class="fa-solid fa-droplet"></i> Total Daily</span>
                 <strong id="rTotal">—</strong>
               </div>
             </div>
 
+            <!-- PRIORITY 2C: Country comparison -->
+            <div class="calc__compare" id="calcCompare"></div>
+
             <div class="calc__savings-box">
-              <div class="calc__savings-title">
-                <i class="fa-solid fa-leaf"></i> If you reduce by 20%…
-              </div>
+              <div class="calc__savings-title"><i class="fa-solid fa-leaf"></i> If you reduce by 20%…</div>
               <div class="calc__savings-grid">
-                <div class="calc__saving">
-                  <strong id="saveDaily">—</strong>
-                  <span>Liters saved / day</span>
-                </div>
-                <div class="calc__saving">
-                  <strong id="saveWeekly">—</strong>
-                  <span>Liters saved / week</span>
-                </div>
-                <div class="calc__saving">
-                  <strong id="saveYearly">—</strong>
-                  <span>Liters saved / year</span>
-                </div>
-                <div class="calc__saving calc__saving--highlight">
-                  <strong id="savePeople">—</strong>
-                  <span>People's daily need covered</span>
-                </div>
+                <div class="calc__saving"><strong id="saveDaily">—</strong><span>L saved / day</span></div>
+                <div class="calc__saving"><strong id="saveWeekly">—</strong><span>L saved / week</span></div>
+                <div class="calc__saving"><strong id="saveYearly">—</strong><span>L saved / year</span></div>
+                <div class="calc__saving calc__saving--highlight"><strong id="savePeople">—</strong><span>people's daily need / yr</span></div>
               </div>
             </div>
+
+            <!-- PRIORITY 2D: Pledge button -->
+            <div class="calc__pledge" id="calcPledge">
+              <p>Ready to make a difference?</p>
+              <button class="btn btn--primary btn--ripple" id="pledgeBtn">
+                <i class="fa-solid fa-hand-peace"></i> I Pledge to Reduce by 20%
+              </button>
+              <div class="calc__pledge-done hidden" id="pledgeDone">
+                <i class="fa-solid fa-medal"></i>
+                <span id="pledgeDate"></span>
+              </div>
+            </div>
+
+            <!-- BONUS: Share card -->
+            <button class="btn btn--ghost btn--full" id="shareBtn" style="margin-top:.75rem">
+              <i class="fa-solid fa-share-nodes"></i> Share My Impact
+            </button>
+            <div class="calc__share-card hidden" id="shareCard"></div>
 
             <div class="calc__rating" id="calcRating"></div>
           </div>
@@ -359,10 +374,9 @@
     <div class="container">
       <div class="section__label reveal" style="color:#7dd3fc"><i class="fa-solid fa-chart-line"></i> Collective Impact</div>
       <h2 class="reveal" style="color:#fff">Together We're<br /><span class="gradient-text-2">Making Waves</span></h2>
-      <p class="section__sub reveal" style="color:rgba(240,246,255,.6);max-width:45ch">
-        Every person who uses AquaSave contributes to a growing movement of water conservation.
+      <p class="section__sub reveal" style="color:rgba(240,246,255,.6);max-width:44ch">
+        Every person who uses AquaSave contributes to a growing global movement.
       </p>
-
       <div class="impact__stats">
         <div class="impact__stat reveal">
           <div class="impact__stat-icon"><i class="fa-solid fa-droplet"></i></div>
@@ -389,141 +403,255 @@
           <div class="impact__stat-note">Simulated user feedback</div>
         </div>
       </div>
-
       <div class="impact__sim-note reveal">
-        ⚠️ All figures above are <strong>simulated estimates</strong> for demonstration purposes. Not real-world verified data.
+        ⚠️ All figures are <strong>simulated estimates</strong> for demonstration purposes — not verified real-world data.
       </div>
-
-      <!-- Live usage bar -->
       <div class="impact__live reveal">
         <div class="impact__live-label">
           <span><i class="fa-solid fa-signal"></i> Global Water Waste Today (Estimated)</span>
           <span class="impact__live-val" id="liveWaste">Calculating…</span>
         </div>
         <div class="prog-bar">
-          <div class="prog-fill prog-fill--animated" style="background:linear-gradient(90deg,#0ea5e9,#f87171);width:78%"></div>
+          <div class="prog-fill" style="background:linear-gradient(90deg,#0ea5e9,#f87171);width:0" id="liveBar"></div>
         </div>
         <div class="impact__live-sub">78% of household water could be reduced through simple habit changes</div>
       </div>
     </div>
   </section>
 
-  <!-- ══ TIPS ══ -->
+  <!-- ══ PRIORITY 3: INVISIBLE WATER ══ -->
+  <section class="invisible section" id="invisible">
+    <div class="container">
+      <div class="section__header">
+        <div class="section__label reveal"><i class="fa-solid fa-eye-slash"></i> Virtual Water</div>
+        <h2 class="reveal">The Water<br /><span class="gradient-text">You Don't See</span></h2>
+        <p class="section__sub reveal">
+          92% of global water use is invisible — embedded in the food we eat and goods we buy.
+          These numbers will change how you think.
+        </p>
+      </div>
+      <div class="invisible__grid">
+        <div class="invisible__card reveal">
+          <div class="invisible__emoji">☕</div>
+          <div class="invisible__liters">140L</div>
+          <div class="invisible__item">1 cup of coffee</div>
+          <div class="invisible__bar"><div class="invisible__fill" style="width:2%"></div></div>
+        </div>
+        <div class="invisible__card reveal">
+          <div class="invisible__emoji">🍎</div>
+          <div class="invisible__liters">125L</div>
+          <div class="invisible__item">1 apple</div>
+          <div class="invisible__bar"><div class="invisible__fill" style="width:1.5%"></div></div>
+        </div>
+        <div class="invisible__card reveal">
+          <div class="invisible__emoji">🍔</div>
+          <div class="invisible__liters">2,400L</div>
+          <div class="invisible__item">1 hamburger</div>
+          <div class="invisible__bar"><div class="invisible__fill" style="width:30%"></div></div>
+        </div>
+        <div class="invisible__card reveal">
+          <div class="invisible__emoji">👕</div>
+          <div class="invisible__liters">2,700L</div>
+          <div class="invisible__item">1 cotton t-shirt</div>
+          <div class="invisible__bar"><div class="invisible__fill" style="width:33%"></div></div>
+        </div>
+        <div class="invisible__card invisible__card--big reveal">
+          <div class="invisible__emoji">📱</div>
+          <div class="invisible__liters">12,700L</div>
+          <div class="invisible__item">1 smartphone</div>
+          <div class="invisible__bar"><div class="invisible__fill" style="width:100%"></div></div>
+        </div>
+        <div class="invisible__card reveal">
+          <div class="invisible__emoji">🚗</div>
+          <div class="invisible__liters">400,000L</div>
+          <div class="invisible__item">1 car (manufacture)</div>
+          <div class="invisible__bar"><div class="invisible__fill" style="width:100%;background:linear-gradient(90deg,#f87171,#fbbf24)"></div></div>
+        </div>
+      </div>
+      <div class="invisible__source reveal">
+        <i class="fa-solid fa-book-open"></i>
+        Source: <a href="https://www.unesco.org/en/water-security" target="_blank" rel="noopener">UNESCO Institute for Water Education, 2023</a> · Water Footprint Network
+      </div>
+      <div class="invisible__message reveal">
+        <i class="fa-solid fa-lightbulb"></i>
+        <p>Choosing a plant-based meal once a week can save more water than skipping 10 showers. Water is everywhere — the choices we make matter far beyond the tap.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ TIPS (FIX 1: Working habit tracker) ══ -->
   <section class="tips section" id="tips">
     <div class="container">
       <div class="section__header">
-        <div class="section__label reveal"><i class="fa-solid fa-lightbulb"></i> Smart Tips</div>
-        <h2 class="reveal">Daily Water<br /><span class="gradient-text">Conservation Tips</span></h2>
-        <p class="section__sub reveal">Small habits, massive impact. Start with just one today.</p>
+        <div class="section__label reveal"><i class="fa-solid fa-lightbulb"></i> Habit Tracker</div>
+        <h2 class="reveal">Daily Conservation<br /><span class="gradient-text">Challenge</span></h2>
+        <p class="section__sub reveal">Click a tip to mark it done. Your score is saved automatically — even after you close the browser.</p>
+      </div>
+
+      <div class="tips__progress-bar reveal">
+        <div class="tips__progress-label">
+          <span><i class="fa-solid fa-trophy"></i> Conservation Score</span>
+          <strong id="scoreDisplay">0 / 6</strong>
+        </div>
+        <div class="prog-bar">
+          <div class="prog-fill" id="scoreBar" style="background:linear-gradient(90deg,#0ea5e9,#22d3ee);width:0;transition:width .5s ease"></div>
+        </div>
+        <div class="tips__progress-level" id="progressLevel">Start completing tips to build your score!</div>
       </div>
 
       <div class="tips__grid">
 
-        <div class="tip-card reveal">
+        <div class="tip-card reveal" data-tip-id="0">
           <div class="tip-card__icon tip-card__icon--blue"><i class="fa-solid fa-faucet-drip"></i></div>
           <div class="tip-card__body">
             <h3>Turn Off the Tap</h3>
             <p>Turn off tap while brushing teeth or washing hands. Saves up to <strong>12 liters</strong> per minute.</p>
             <div class="tip-card__save"><i class="fa-solid fa-droplet"></i> Saves ~24L/day</div>
           </div>
-          <button class="tip-card__done" data-tip="0" title="Mark as done">
+          <button class="tip-card__toggle" aria-label="Mark as done">
             <i class="fa-regular fa-circle-check"></i>
           </button>
         </div>
 
-        <div class="tip-card reveal">
+        <div class="tip-card reveal" data-tip-id="1">
           <div class="tip-card__icon tip-card__icon--teal"><i class="fa-solid fa-wrench"></i></div>
           <div class="tip-card__body">
             <h3>Fix Leaks Immediately</h3>
             <p>A dripping faucet wastes over <strong>3,000 liters per year</strong>. Fix leaks as soon as they appear.</p>
             <div class="tip-card__save"><i class="fa-solid fa-droplet"></i> Saves ~8L/day</div>
           </div>
-          <button class="tip-card__done" data-tip="1" title="Mark as done">
+          <button class="tip-card__toggle" aria-label="Mark as done">
             <i class="fa-regular fa-circle-check"></i>
           </button>
         </div>
 
-        <div class="tip-card reveal">
+        <div class="tip-card reveal" data-tip-id="2">
           <div class="tip-card__icon tip-card__icon--green"><i class="fa-solid fa-bucket"></i></div>
           <div class="tip-card__body">
             <h3>Bucket Over Hose</h3>
-            <p>Use a bucket instead of a hose for washing cars or watering plants — uses <strong>80% less water</strong>.</p>
+            <p>Use a bucket instead of a hose for cars or plants — uses <strong>80% less water</strong>.</p>
             <div class="tip-card__save"><i class="fa-solid fa-droplet"></i> Saves ~150L/wash</div>
           </div>
-          <button class="tip-card__done" data-tip="2" title="Mark as done">
+          <button class="tip-card__toggle" aria-label="Mark as done">
             <i class="fa-regular fa-circle-check"></i>
           </button>
         </div>
 
-        <div class="tip-card reveal">
+        <div class="tip-card reveal" data-tip-id="3">
           <div class="tip-card__icon tip-card__icon--blue"><i class="fa-solid fa-shower"></i></div>
           <div class="tip-card__body">
             <h3>Shorter Showers</h3>
             <p>Cutting your shower from 10 to 5 minutes saves about <strong>50 liters</strong> every time.</p>
             <div class="tip-card__save"><i class="fa-solid fa-droplet"></i> Saves ~50L/shower</div>
           </div>
-          <button class="tip-card__done" data-tip="3" title="Mark as done">
+          <button class="tip-card__toggle" aria-label="Mark as done">
             <i class="fa-regular fa-circle-check"></i>
           </button>
         </div>
 
-        <div class="tip-card reveal">
+        <div class="tip-card reveal" data-tip-id="4">
           <div class="tip-card__icon tip-card__icon--teal"><i class="fa-solid fa-moon"></i></div>
           <div class="tip-card__body">
             <h3>Water Plants at Night</h3>
             <p>Watering in early morning or evening reduces evaporation by up to <strong>70%</strong>.</p>
             <div class="tip-card__save"><i class="fa-solid fa-droplet"></i> Saves ~30L/day</div>
           </div>
-          <button class="tip-card__done" data-tip="4" title="Mark as done">
+          <button class="tip-card__toggle" aria-label="Mark as done">
             <i class="fa-regular fa-circle-check"></i>
           </button>
         </div>
 
-        <div class="tip-card reveal">
+        <div class="tip-card reveal" data-tip-id="5">
           <div class="tip-card__icon tip-card__icon--green"><i class="fa-solid fa-recycle"></i></div>
           <div class="tip-card__body">
             <h3>Reuse Cooking Water</h3>
             <p>Cool pasta or vegetable water can be used to water plants — waste nothing.</p>
             <div class="tip-card__save"><i class="fa-solid fa-droplet"></i> Saves ~5L/meal</div>
           </div>
-          <button class="tip-card__done" data-tip="5" title="Mark as done">
+          <button class="tip-card__toggle" aria-label="Mark as done">
             <i class="fa-regular fa-circle-check"></i>
           </button>
         </div>
 
       </div>
 
-      <div class="tips__score reveal" id="tipsScore">
+      <!-- Achievement badge -->
+      <div class="tips__achievement reveal hidden" id="tipsAchievement">
         <i class="fa-solid fa-trophy"></i>
-        <span>Complete tips to earn your Conservation Score: <strong id="scoreVal">0</strong>/6</span>
+        <div>
+          <strong>🏆 Water Champion!</strong>
+          <span>You've completed all 6 habits. You're saving an estimated <strong>267+ liters per day</strong>.</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ══ LOGIN MODAL ══ -->
-  <div class="modal-overlay" id="loginOverlay">
-    <div class="modal" id="loginModal">
-      <button class="modal__close" id="loginClose"><i class="fa-solid fa-xmark"></i></button>
-      <div class="modal__icon"><i class="fa-solid fa-droplet"></i></div>
-      <h2>Welcome Back</h2>
-      <p>Sign in to track your water savings across sessions.</p>
-      <div class="form__group">
-        <label><i class="fa-solid fa-envelope"></i> Email</label>
-        <input type="email" placeholder="you@example.com" />
+  <!-- ══ PRIORITY 5: SOURCES ══ -->
+  <section class="sources section" id="sources">
+    <div class="container">
+      <div class="section__header">
+        <div class="section__label reveal"><i class="fa-solid fa-book-open"></i> Academic Credibility</div>
+        <h2 class="reveal">Sources &amp;<br /><span class="gradient-text">Data References</span></h2>
+        <p class="section__sub reveal">All statistics on this site are drawn from globally recognised institutions.</p>
       </div>
-      <div class="form__group">
-        <label><i class="fa-solid fa-lock"></i> Password</label>
-        <input type="password" placeholder="••••••••" />
+      <div class="sources__grid">
+        <a href="https://www.who.int/news-room/fact-sheets/detail/drinking-water" target="_blank" rel="noopener" class="source-card reveal">
+          <div class="source-card__icon"><i class="fa-solid fa-hospital"></i></div>
+          <div class="source-card__body">
+            <strong>WHO Drinking Water Fact Sheet</strong>
+            <span>World Health Organization, 2023</span>
+            <p>Global statistics on access to safe drinking water and waterborne disease mortality rates.</p>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square source-card__link"></i>
+        </a>
+        <a href="https://sdgs.un.org/goals/goal6" target="_blank" rel="noopener" class="source-card reveal">
+          <div class="source-card__icon"><i class="fa-solid fa-earth-africa"></i></div>
+          <div class="source-card__body">
+            <strong>UN SDG 6 Progress Report</strong>
+            <span>United Nations, 2023</span>
+            <p>Official progress tracking toward the 2030 clean water and sanitation targets.</p>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square source-card__link"></i>
+        </a>
+        <a href="https://www.wri.org/aqueduct" target="_blank" rel="noopener" class="source-card reveal">
+          <div class="source-card__icon"><i class="fa-solid fa-map-location-dot"></i></div>
+          <div class="source-card__body">
+            <strong>WRI Aqueduct Water Risk Atlas</strong>
+            <span>World Resources Institute</span>
+            <p>Interactive global map of water stress, scarcity, and flood risk by country and region.</p>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square source-card__link"></i>
+        </a>
+        <a href="https://www.waterfootprint.org" target="_blank" rel="noopener" class="source-card reveal">
+          <div class="source-card__icon"><i class="fa-solid fa-droplet"></i></div>
+          <div class="source-card__body">
+            <strong>Water Footprint Network</strong>
+            <span>UNESCO / WFN, 2023</span>
+            <p>Virtual water content data for agricultural products, textiles, and manufactured goods.</p>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square source-card__link"></i>
+        </a>
+        <a href="https://data.unicef.org/topic/water-and-sanitation/" target="_blank" rel="noopener" class="source-card reveal">
+          <div class="source-card__icon"><i class="fa-solid fa-child"></i></div>
+          <div class="source-card__body">
+            <strong>UNICEF Water &amp; Sanitation Data</strong>
+            <span>UNICEF, 2023</span>
+            <p>Statistics on school WASH access, child mortality from water diseases, and gender data.</p>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square source-card__link"></i>
+        </a>
+        <a href="https://www.worldbank.org/en/topic/water" target="_blank" rel="noopener" class="source-card reveal">
+          <div class="source-card__icon"><i class="fa-solid fa-landmark"></i></div>
+          <div class="source-card__body">
+            <strong>World Bank — Water</strong>
+            <span>World Bank Group, 2023</span>
+            <p>Economic impact analysis of water and sanitation gaps on GDP and development outcomes.</p>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square source-card__link"></i>
+        </a>
       </div>
-      <button class="btn btn--primary btn--full btn--ripple" id="loginBtn">
-        <i class="fa-solid fa-right-to-bracket"></i> Sign In
-      </button>
-      <p class="modal__sub">
-        <i class="fa-solid fa-circle-info"></i>
-        This is a <strong>demo login</strong> — part of the AquaSave prototype.
-      </p>
     </div>
-  </div>
+  </section>
 
   <!-- ══ CONTACT ══ -->
   <section class="contact section" id="contact">
@@ -532,7 +660,7 @@
         <div class="contact__info reveal">
           <div class="section__label"><i class="fa-solid fa-envelope"></i> Get In Touch</div>
           <h2>Join the<br /><span class="gradient-text">Water Movement</span></h2>
-          <p>Have a question, want to partner, or just want to share how much water you've saved? We'd love to hear from you.</p>
+          <p>Have a question, want to partner, or want to share how much water you've saved? We'd love to hear from you.</p>
           <div class="contact__ways">
             <div class="contact__way">
               <div class="contact__way-icon"><i class="fa-solid fa-envelope"></i></div>
@@ -540,7 +668,7 @@
             </div>
             <div class="contact__way">
               <div class="contact__way-icon"><i class="fa-brands fa-twitter"></i></div>
-              <div><strong>Twitter / X</strong><a href="#">@AquaSaveOrg</a></div>
+              <div><strong>Twitter / X</strong><a href="https://twitter.com" target="_blank" rel="noopener">@AquaSaveOrg</a></div>
             </div>
             <div class="contact__way">
               <div class="contact__way-icon"><i class="fa-solid fa-handshake"></i></div>
@@ -548,7 +676,6 @@
             </div>
           </div>
         </div>
-
         <form class="contact__form reveal" id="contactForm" novalidate>
           <div class="form__group">
             <label><i class="fa-solid fa-user"></i> Full Name</label>
@@ -560,7 +687,7 @@
           </div>
           <div class="form__group">
             <label><i class="fa-solid fa-comment-dots"></i> Message</label>
-            <textarea id="cMsg" rows="4" placeholder="Tell us how you'd like to get involved, or ask us anything about water conservation…"></textarea>
+            <textarea id="cMsg" rows="4" placeholder="Tell us how you'd like to get involved…"></textarea>
           </div>
           <button type="submit" class="btn btn--primary btn--full btn--ripple">
             <i class="fa-solid fa-paper-plane"></i> Send Message
@@ -580,11 +707,11 @@
         <div class="footer__brand">
           <div class="footer__logo"><i class="fa-solid fa-droplet"></i> AquaSave</div>
           <p>A conceptual prototype for UN SDG 6 — Clean Water &amp; Sanitation for all by 2030.</p>
+          <p class="footer__disclaimer">⚠️ Educational prototype. All statistics simulated or sourced from WHO/UN/UNICEF.</p>
           <div class="footer__socials">
-            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://twitter.com" target="_blank" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://github.com" target="_blank" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
           </div>
         </div>
         <div class="footer__col">
@@ -592,21 +719,22 @@
           <a href="#about">About SDG 6</a>
           <a href="#features">Features</a>
           <a href="#calculator">Calculator</a>
-          <a href="#tips">Tips</a>
+          <a href="#tips">Habit Tracker</a>
         </div>
         <div class="footer__col">
-          <h4>Resources</h4>
-          <a href="#">Water Index</a>
-          <a href="#">Research</a>
-          <a href="#">API Docs</a>
-          <a href="#">Newsletter</a>
+          <!-- FIX 3: Real links instead of dead # links -->
+          <h4>Research</h4>
+          <a href="https://www.who.int/news-room/fact-sheets/detail/drinking-water" target="_blank" rel="noopener">WHO Water Facts</a>
+          <a href="https://www.wri.org/aqueduct" target="_blank" rel="noopener">Water Risk Atlas</a>
+          <a href="https://sdgs.un.org/goals/goal6" target="_blank" rel="noopener">UN SDG 6 Report</a>
+          <a href="https://www.waterfootprint.org" target="_blank" rel="noopener">Water Footprint</a>
         </div>
         <div class="footer__col">
           <h4>Connect</h4>
           <a href="#contact">Contact Us</a>
           <a href="#contact">Partner</a>
-          <a href="#contact">Volunteer</a>
-          <a href="#login">Login</a>
+          <a href="#sources">Sources</a>
+          <a href="#invisible">Invisible Water</a>
         </div>
       </div>
       <div class="footer__bottom">
@@ -616,10 +744,7 @@
     </div>
   </footer>
 
-  <!-- Back to top -->
-  <button class="back-top" id="backTop" title="Back to top">
-    <i class="fa-solid fa-arrow-up"></i>
-  </button>
+  <button class="back-top" id="backTop" title="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
 
   <script src="script.js"></script>
 </body>
