@@ -67,6 +67,7 @@
       <li><a href="#crisis">The Crisis</a></li>
       <li><a href="#invisible">Hidden Water</a></li>
       <li><a href="#calculator">Calculator</a></li>
+      <li><a href="#carbon">CO₂ Impact</a></li>
       <li><a href="#habits">Habits</a></li>
       <li><a href="#impact">Impact</a></li>
       <li><a href="#faq">FAQ</a></li>
@@ -85,6 +86,7 @@
     <a href="#crisis">🌊 The Crisis</a>
     <a href="#invisible">👁️ Hidden Water</a>
     <a href="#calculator">🧮 Calculator</a>
+    <a href="#carbon">🌿 CO₂ Impact</a>
     <a href="#habits">💡 My Habits</a>
     <a href="#impact">📊 Impact</a>
     <a href="#faq">❓ FAQ</a>
@@ -472,6 +474,157 @@
             </button>
 
           </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════
+       CARBON FOOTPRINT FROM WATER
+  ════════════════════════════════════════════ -->
+  <section id="carbon">
+    <div class="section-wrap">
+      <p class="section-label reveal">Climate Impact</p>
+      <h2 class="section-title reveal">
+        Your Water's<br /><span class="gradient-text">Carbon Footprint</span>
+      </h2>
+      <p class="section-desc reveal">
+        Treating and pumping water requires energy — and energy means CO₂.
+        Based on the Egypt/MENA grid average of <strong>0.298 kg CO₂ per m³</strong>,
+        here is the climate cost of your household's water use.
+      </p>
+
+      <!-- Prompt to calculate first -->
+      <div class="carbon-prompt reveal" id="carbonPrompt">
+        <span class="carbon-prompt-icon">🌿</span>
+        <p>
+          <a href="#calculator">Calculate your water footprint first</a>
+          to unlock your personalised CO₂ impact report.
+        </p>
+      </div>
+
+      <!-- Full carbon panel (hidden until calculation) -->
+      <div class="carbon-panel hidden" id="carbonPanel">
+
+        <!-- Gauge + headline number -->
+        <div class="carbon-top reveal">
+          <div class="carbon-gauge-wrap">
+            <svg class="carbon-gauge" viewBox="0 0 220 130" aria-hidden="true">
+              <!-- Track -->
+              <path class="gauge-track"
+                d="M25,115 A90,90 0 0,1 195,115"
+                fill="none" stroke="rgba(255,255,255,0.06)"
+                stroke-width="18" stroke-linecap="round"/>
+              <!-- Fill (animated via JS) -->
+              <path class="gauge-fill" id="carbonGaugeFill"
+                d="M25,115 A90,90 0 0,1 195,115"
+                fill="none"
+                stroke="url(#carbonGrad)"
+                stroke-width="18" stroke-linecap="round"
+                stroke-dasharray="283" stroke-dashoffset="283"/>
+              <defs>
+                <linearGradient id="carbonGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%"   stop-color="#2ecc71"/>
+                  <stop offset="50%"  stop-color="#f7c948"/>
+                  <stop offset="100%" stop-color="#ff6b35"/>
+                </linearGradient>
+              </defs>
+              <!-- Centre text -->
+              <text x="110" y="96" text-anchor="middle"
+                class="gauge-number-text" id="carbonGaugeNumber">0</text>
+              <text x="110" y="114" text-anchor="middle"
+                class="gauge-unit-text">kg CO₂ / month</text>
+            </svg>
+
+            <div class="carbon-gauge-legend">
+              <span class="cg-leg cg-leg--low">Low</span>
+              <span class="cg-leg cg-leg--mid">Moderate</span>
+              <span class="cg-leg cg-leg--high">High</span>
+            </div>
+          </div>
+
+          <div class="carbon-summary">
+            <div class="carbon-summary-row" id="carbonHeadline"></div>
+
+            <div class="carbon-summary-stats">
+              <div class="cs-stat">
+                <span class="cs-stat-value" id="cMonthly">—</span>
+                <span class="cs-stat-label">kg CO₂ this month</span>
+              </div>
+              <div class="cs-stat">
+                <span class="cs-stat-value" id="cYearly">—</span>
+                <span class="cs-stat-label">kg CO₂ per year</span>
+              </div>
+            </div>
+
+            <!-- Animated bar — daily CO₂ -->
+            <div class="carbon-bar-wrap">
+              <div class="carbon-bar-label">
+                <span>Daily CO₂ from water</span>
+                <strong id="cDailyLabel">—</strong>
+              </div>
+              <div class="carbon-bar-track">
+                <div class="carbon-bar-fill" id="carbonBarFill"></div>
+              </div>
+              <div class="carbon-bar-label" style="margin-top:8px">
+                <span>With 20% reduction</span>
+                <strong id="cSaveLabel" class="good">—</strong>
+              </div>
+              <div class="carbon-bar-track">
+                <div class="carbon-bar-fill carbon-bar-fill--save" id="carbonBarSave"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-world equivalents -->
+        <h3 class="carbon-equiv-title reveal">What Does That Actually Mean?</h3>
+        <div class="carbon-equiv-grid reveal">
+
+          <div class="equiv-card">
+            <span class="equiv-icon">🚗</span>
+            <div class="equiv-body">
+              <strong id="eqCar">—</strong>
+              <span>km driven by car</span>
+              <p>per month, based on avg. petrol car emitting 0.21 kg CO₂/km</p>
+            </div>
+          </div>
+
+          <div class="equiv-card">
+            <span class="equiv-icon">🌳</span>
+            <div class="equiv-body">
+              <strong id="eqTrees">—</strong>
+              <span>trees needed to offset</span>
+              <p>each absorbs ~21 kg CO₂/year — how many would cancel your water footprint?</p>
+            </div>
+          </div>
+
+          <div class="equiv-card">
+            <span class="equiv-icon">📱</span>
+            <div class="equiv-body">
+              <strong id="eqPhones">—</strong>
+              <span>smartphone charges</span>
+              <p>per month — equivalent energy to charging a phone from 0 → 100%</p>
+            </div>
+          </div>
+
+          <div class="equiv-card equiv-card--save">
+            <span class="equiv-icon">♻️</span>
+            <div class="equiv-body">
+              <strong id="eqSaveCo2">—</strong>
+              <span>kg CO₂ saved per year</span>
+              <p>by reducing water use by 20% — the equivalent of planting <strong id="eqSaveTrees">—</strong> trees</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="carbon-source reveal">
+          📐 Formula: daily litres ÷ 1000 × 30 × 0.298 kg CO₂/m³
+          · Source: <a href="https://www.iea.org" target="_blank" rel="noopener">IEA</a> /
+          <a href="https://www.worldbank.org/en/topic/water" target="_blank" rel="noopener">World Bank</a>
+          — Egypt/MENA grid emission factor estimate.
         </div>
 
       </div>

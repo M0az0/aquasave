@@ -38,6 +38,15 @@ const CONFIG = {
 
   wasteRatePerSecond: 34722, // litres of household water wasted globally per second
 
+  // Carbon footprint constants
+  carbon: {
+    kgCo2PerM3:     0.298,   // Egypt/MENA grid — kg CO₂ per m³ treated & pumped
+    carKgPerKm:     0.210,   // avg petrol car — kg CO₂ per km
+    treeKgPerYear:  21,      // avg tree CO₂ absorption per year
+    phoneKgPerCharge: 0.004, // smartphone full charge — kWh × 0.5 kg CO₂/kWh
+    gaugeMaxMonthly: 20,     // kg CO₂/month considered "high" (gauge ceiling)
+  },
+
   chartColors: ['#38c5f5', '#2a9fd4', '#7ee8fa', '#1a6b9e', '#0d4a7a', '#052040'],
 
   egyptDailyAvgPerPerson: 200,
@@ -444,6 +453,9 @@ function calculateUsage() {
   restorePledgeState();
 
   showToast('✅ <strong>Done!</strong> Your water footprint has been calculated.');
+
+  // Render carbon section immediately after calculation
+  renderCarbonFootprint(totalLiters);
 }
 
 function renderFeedbackBadge(total) {
@@ -721,6 +733,102 @@ function shareOnWhatsApp() {
   );
 
   window.open(`https://wa.me/?text=${message}`, '_blank', 'noopener');
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   CARBON FOOTPRINT FROM WATER
+══════════════════════════════════════════════════════════ */
+
+/**
+ * Core calculation: converts daily water litres → monthly CO₂ kg
+ * Formula: L/day ÷ 1000 × 30 × 0.298 kg CO₂/m³
+ */
+function calcCarbonMonthly(dailyLitres) {
+  const cf = CONFIG.carbon;
+  return parseFloat(((dailyLitres / 1000) * 30 * cf.kgCo2PerM3).toFixed(3));
+}
+
+function renderCarbonFootprint(dailyLitres) {
+  const cf = CONFIG.carbon;
+
+  // Reveal the panel, hide the prompt
+  document.getElementById('carbonPrompt')?.classList.add('hidden');
+  const panel = document.getElementById('carbonPanel');
+  if (panel) panel.classList.remove('hidden');
+
+  // ── Core numbers ──────────────────────────────────────
+  const monthly     = calcCarbonMonthly(dailyLitres);
+  const yearly      = parseFloat((monthly * 12).toFixed(2));
+  const dailyKg     = parseFloat(((dailyLitres / 1000) * cf.kgCo2PerM3).toFixed(4));
+
+  const save20Daily   = parseFloat((dailyKg * 0.2).toFixed(4));
+  const save20Monthly = parseFloat((monthly * 0.2).toFixed(3));
+  const save20Yearly  = parseFloat((yearly * 0.2).toFixed(2));
+
+  // ── Real-world equivalents (monthly) ─────────────────
+  const carKm     = Math.round(monthly / cf.carKgPerKm);
+  const trees     = (monthly / (cf.treeKgPerYear / 12)).toFixed(1);
+  const phones    = Math.round(monthly / cf.phoneKgPerCharge);
+  const saveTrees = (save20Yearly / cf.treeKgPerYear).toFixed(1);
+
+  // ── Populate text fields ──────────────────────────────
+  setText('cMonthly',  monthly.toLocaleString());
+  setText('cYearly',   yearly.toLocaleString());
+  setText('cDailyLabel', `${dailyKg} kg CO₂`);
+  setText('cSaveLabel',  `−${save20Daily} kg CO₂`);
+  setText('eqCar',    carKm.toLocaleString());
+  setText('eqTrees',  trees);
+  setText('eqPhones', phones.toLocaleString());
+  setText('eqSaveCo2', save20Yearly.toLocaleString());
+  setText('eqSaveTrees', saveTrees);
+
+  // ── Animated gauge number ─────────────────────────────
+  animateNumber('carbonGaugeNumber', 0, monthly, 1400);
+
+  // ── SVG gauge fill (stroke-dashoffset) ───────────────
+  const ratio  = Math.min(monthly / cf.gaugeMaxMonthly, 1);
+  const offset = 283 - (283 * ratio);
+  setTimeout(() => {
+    const fill = document.getElementById('carbonGaugeFill');
+    if (fill) fill.style.strokeDashoffset = offset;
+  }, 120);
+
+  // ── Animated progress bars ────────────────────────────
+  // Use relative width: daily bar = 100%, save bar = 80% (20% less)
+  setTimeout(() => {
+    const dailyBar = document.getElementById('carbonBarFill');
+    const saveBar  = document.getElementById('carbonBarSave');
+    if (dailyBar) dailyBar.style.width = '100%';
+    if (saveBar)  saveBar.style.width  = '80%';
+  }, 200);
+
+  // ── Headline sentiment badge ──────────────────────────
+  const headlineEl = document.getElementById('carbonHeadline');
+  if (headlineEl) {
+    headlineEl.className = 'carbon-summary-row';
+    if (monthly < 3) {
+      headlineEl.textContent = '🌱 Low carbon impact — your water habits are climate-friendly!';
+      headlineEl.classList.add('is-low');
+    } else if (monthly < 8) {
+      headlineEl.textContent = '👍 Moderate carbon impact — room to improve with small habit changes.';
+      headlineEl.classList.add('is-moderate');
+    } else {
+      headlineEl.textContent = '⚠️ High carbon impact — reducing water use could significantly cut your CO₂.';
+      headlineEl.classList.add('is-high');
+    }
+  }
+
+  // ── Scroll into view smoothly ─────────────────────────
+  setTimeout(() => {
+    document.getElementById('carbon')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 300);
+}
+
+/** Small helper to safely set text content */
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
 }
 
 
