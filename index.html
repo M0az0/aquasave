@@ -16,6 +16,16 @@
 </head>
 <body>
 
+  <!-- ─── Reminder Banner (shown conditionally by JS) ── -->
+  <div class="reminder-banner hidden" id="reminderBanner" role="alert">
+    <span class="reminder-banner__icon">💧</span>
+    <span class="reminder-banner__text" id="reminderBannerText">
+      You haven't completed your water habits today — it only takes a minute!
+    </span>
+    <a href="#habits" class="reminder-banner__link">Go to Habits →</a>
+    <button class="reminder-banner__close" id="reminderBannerClose" aria-label="Dismiss">✕</button>
+  </div>
+
   <!-- ─── Scroll Progress ─────────────────────── -->
   <div id="scrollProgress" aria-hidden="true"></div>
 
@@ -67,7 +77,9 @@
       <li><a href="#crisis">The Crisis</a></li>
       <li><a href="#invisible">Hidden Water</a></li>
       <li><a href="#calculator">Calculator</a></li>
+      <li><a href="#budget">Water Budget</a></li>
       <li><a href="#carbon">CO₂ Impact</a></li>
+      <li><a href="#budget">💰 Water Budget</a></li>
       <li><a href="#habits">Habits</a></li>
       <li><a href="#impact">Impact</a></li>
       <li><a href="#faq">FAQ</a></li>
@@ -86,7 +98,9 @@
     <a href="#crisis">🌊 The Crisis</a>
     <a href="#invisible">👁️ Hidden Water</a>
     <a href="#calculator">🧮 Calculator</a>
+    <a href="#budget">💰 Water Budget</a>
     <a href="#carbon">🌿 CO₂ Impact</a>
+    <a href="#budget">💰 Water Budget</a>
     <a href="#habits">💡 My Habits</a>
     <a href="#impact">📊 Impact</a>
     <a href="#faq">❓ FAQ</a>
@@ -632,6 +646,259 @@
   </section>
 
   <!-- ════════════════════════════════════════════
+       SMART WATER BUDGET
+  ════════════════════════════════════════════ -->
+  <section id="budget">
+    <div class="section-wrap">
+      <p class="section-label reveal">Financial Awareness</p>
+      <h2 class="section-title reveal">
+        Smart Water<br /><span class="gradient-text">Budget</span>
+      </h2>
+      <p class="section-desc reveal">
+        Understand the real financial cost of your water use — from your monthly
+        bill to the hidden price of everyday choices.
+      </p>
+
+      <!-- ── DISCLAIMER ─────────────────────────── -->
+      <div class="budget-disclaimer reveal">
+        <span class="bd-icon">⚠️</span>
+        <div>
+          <strong>Official Tariff Estimate — Not a Precise Bill</strong>
+          <p>
+            These estimates use Egypt's official residential water tiered tariff.
+            Actual bills in 2026 may be significantly higher depending on your
+            governorate, building type, and any unannounced price adjustments.
+            This tool is for <em>financial awareness only</em> — not a precise bill predictor.
+          </p>
+        </div>
+      </div>
+
+      <!-- ── TAB NAVIGATION ─────────────────────── -->
+      <div class="budget-tabs reveal">
+        <button class="budget-tab active" data-tab="bill">📄 Bill Estimator</button>
+        <button class="budget-tab" data-tab="virtual">🧺 Virtual Water Cost</button>
+        <button class="budget-tab" data-tab="savings">💰 Savings Comparison</button>
+      </div>
+
+      <!-- ════ PART A — BILL ESTIMATOR ════ -->
+      <div class="budget-panel" id="tab-bill">
+
+        <div class="bill-grid">
+          <!-- Inputs -->
+          <div class="bill-inputs reveal">
+            <h3><span>🏠</span> Your Consumption Details</h3>
+
+            <div class="bill-field">
+              <label>Daily Water Use</label>
+              <div class="bill-source-row">
+                <span class="bill-source-chip" id="billSourceChip">
+                  📊 From your calculator
+                </span>
+                <span class="bill-daily-display" id="billDailyDisplay">—</span>
+              </div>
+              <p class="field-hint">Pull from calculator or enter manually below</p>
+              <div class="bill-manual-row">
+                <input
+                  type="number"
+                  id="billManualLitres"
+                  placeholder="e.g. 300"
+                  min="1" max="5000"
+                  aria-label="Manual daily litres override"
+                />
+                <span>L/day</span>
+                <button class="bill-manual-btn" id="billManualApply">Apply</button>
+              </div>
+            </div>
+
+            <div class="bill-field">
+              <label>Household Size (for per-person view)</label>
+              <div class="bill-people-row">
+                <button class="step-btn" id="billPeopleDown">−</button>
+                <span class="stepper-value" id="billPeopleVal">2</span>
+                <button class="step-btn" id="billPeopleUp">+</button>
+              </div>
+            </div>
+
+            <button class="calc-submit" id="billCalcBtn">
+              💶 Calculate My Bill
+            </button>
+          </div>
+
+          <!-- Results -->
+          <div class="bill-results hidden" id="billResults">
+            <!-- Tier breakdown -->
+            <div class="bill-tier-card reveal">
+              <h4>📊 Monthly Usage Breakdown</h4>
+              <div class="bill-m3-display">
+                <strong id="billM3">—</strong>
+                <span>m³ / month</span>
+              </div>
+              <div class="tier-bars" id="tierBars">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Bill side-by-side -->
+            <div class="bill-comparison reveal">
+              <div class="bill-card bill-card--current">
+                <span class="bill-card-label">Current Bill</span>
+                <strong class="bill-card-amount" id="billCurrentTotal">—</strong>
+                <span class="bill-card-sub">EGP / month (incl. sewage)</span>
+                <div class="bill-card-breakdown" id="billCurrentBreak"></div>
+              </div>
+              <div class="bill-arrow">→</div>
+              <div class="bill-card bill-card--save">
+                <span class="bill-card-label">After −20% Usage</span>
+                <strong class="bill-card-amount" id="billSaveTotal">—</strong>
+                <span class="bill-card-sub">EGP / month (incl. sewage)</span>
+                <div class="bill-saving-badge" id="billSavingBadge"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tariff reference table -->
+        <details class="tariff-details reveal">
+          <summary>View Egypt Official Residential Water Tariff</summary>
+          <div class="tariff-table-wrap">
+            <table class="tariff-table">
+              <thead>
+                <tr><th>Tier</th><th>Consumption</th><th>Rate (EGP/m³)</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>0 – 10 m³</td><td>0.65</td></tr>
+                <tr><td>2</td><td>11 – 20 m³</td><td>1.60</td></tr>
+                <tr><td>3</td><td>21 – 30 m³</td><td>2.25</td></tr>
+                <tr><td>4</td><td>31 – 40 m³</td><td>2.75</td></tr>
+                <tr><td>5</td><td>&gt; 40 m³</td><td>3.15</td></tr>
+              </tbody>
+            </table>
+            <p class="tariff-note">Sewage fee = 75% of water bill · Source: NOPWASD Egypt</p>
+          </div>
+        </details>
+
+      </div>
+
+      <!-- ════ PART B — VIRTUAL WATER COST ════ -->
+      <div class="budget-panel hidden" id="tab-virtual">
+
+        <p class="budget-panel-intro reveal">
+          Select the items you consume regularly. We'll show their hidden water cost
+          in litres <em>and</em> the equivalent EGP at the base water tariff rate (0.65 EGP/m³).
+        </p>
+
+        <div class="virtual-grid reveal">
+
+          <div class="virtual-item" data-item="burger" data-liters="2400" data-label="🍔 Burger">
+            <div class="vi-emoji">🍔</div>
+            <div class="vi-name">Hamburger</div>
+            <div class="vi-water">2,400 L each</div>
+            <div class="vi-controls">
+              <button class="vi-btn" data-dir="-">−</button>
+              <span class="vi-count">0</span>
+              <button class="vi-btn" data-dir="+">+</button>
+              <span class="vi-unit">/ month</span>
+            </div>
+          </div>
+
+          <div class="virtual-item" data-item="coffee" data-liters="140" data-label="☕ Coffee">
+            <div class="vi-emoji">☕</div>
+            <div class="vi-name">Cup of Coffee</div>
+            <div class="vi-water">140 L each</div>
+            <div class="vi-controls">
+              <button class="vi-btn" data-dir="-">−</button>
+              <span class="vi-count">0</span>
+              <button class="vi-btn" data-dir="+">+</button>
+              <span class="vi-unit">/ month</span>
+            </div>
+          </div>
+
+          <div class="virtual-item" data-item="tshirt" data-liters="2700" data-label="👕 T-Shirt">
+            <div class="vi-emoji">👕</div>
+            <div class="vi-name">Cotton T-Shirt</div>
+            <div class="vi-water">2,700 L each</div>
+            <div class="vi-controls">
+              <button class="vi-btn" data-dir="-">−</button>
+              <span class="vi-count">0</span>
+              <button class="vi-btn" data-dir="+">+</button>
+              <span class="vi-unit">/ month</span>
+            </div>
+          </div>
+
+          <div class="virtual-item" data-item="phone" data-liters="12700" data-label="📱 Smartphone">
+            <div class="vi-emoji">📱</div>
+            <div class="vi-name">Smartphone</div>
+            <div class="vi-water">12,700 L each</div>
+            <div class="vi-controls">
+              <button class="vi-btn" data-dir="-">−</button>
+              <span class="vi-count">0</span>
+              <button class="vi-btn" data-dir="+">+</button>
+              <span class="vi-unit">/ month</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="virtual-total reveal" id="virtualTotal">
+          <div class="vt-item">
+            <span>Total Virtual Water</span>
+            <strong id="vtLitres">0 L</strong>
+          </div>
+          <div class="vt-item">
+            <span>EGP Equivalent <em>(at 0.65/m³ base rate)</em></span>
+            <strong id="vtEGP">0.00 EGP</strong>
+          </div>
+          <div class="vt-item">
+            <span>Monthly Virtual m³</span>
+            <strong id="vtM3">0 m³</strong>
+          </div>
+        </div>
+
+        <div class="virtual-note reveal">
+          💡 Virtual water is the water used to produce a product — you never see it at the tap,
+          but it counts toward global freshwater depletion.
+          Source: <a href="https://www.waterfootprint.org" target="_blank" rel="noopener">Water Footprint Network</a>
+        </div>
+
+      </div>
+
+      <!-- ════ PART C — SAVINGS COMPARISON ════ -->
+      <div class="budget-panel hidden" id="tab-savings">
+
+        <p class="budget-panel-intro reveal">
+          Based on your calculated usage, here is exactly what a 20% reduction
+          means for your wallet — and what that money could buy.
+        </p>
+
+        <div class="savings-comparison-grid reveal" id="savingsCompGrid">
+          <div class="sc-panel sc-panel--now">
+            <span class="sc-icon">📊</span>
+            <h3>What You Spend Now</h3>
+            <div class="sc-amount" id="scNow">Run the Bill Estimator first</div>
+            <div class="sc-sub" id="scNowSub"></div>
+          </div>
+          <div class="sc-vs">vs</div>
+          <div class="sc-panel sc-panel--save">
+            <span class="sc-icon">💰</span>
+            <h3>What You Could Save</h3>
+            <div class="sc-amount" id="scSave">—</div>
+            <div class="sc-sub" id="scSaveSub"></div>
+          </div>
+        </div>
+
+        <div class="yearly-saving-card reveal hidden" id="yearlySavingCard">
+          <h4>Your yearly saving of <strong id="ysAmount">—</strong> EGP is equivalent to…</h4>
+          <div class="yearly-equivs" id="yearlyEquivs">
+            <!-- populated by JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════
        HABIT TRACKER
   ════════════════════════════════════════════ -->
   <section id="habits">
@@ -736,6 +1003,39 @@
         <div>
           <strong>Water Conservation Champion!</strong>
           <p>You've adopted all 6 habits — saving an estimated <strong>262+ litres every day</strong>, enough for 5 people's daily minimum needs.</p>
+        </div>
+      </div>
+
+      <!-- ─── Reminder Settings ─────────────────── -->
+      <div class="reminder-settings reveal" id="reminderSettings">
+        <div class="rs-header">
+          <span class="rs-icon">🔔</span>
+          <div>
+            <h3>Smart Reminder Notifications</h3>
+            <p>Get a daily nudge to complete your water habits — never miss a day.</p>
+          </div>
+          <label class="rs-toggle" aria-label="Enable notifications">
+            <input type="checkbox" id="notifToggle" />
+            <span class="rs-toggle-track">
+              <span class="rs-toggle-thumb"></span>
+            </span>
+          </label>
+        </div>
+
+        <div class="rs-body" id="rsBody">
+          <div class="rs-field">
+            <label for="reminderTime">Preferred reminder time</label>
+            <input type="time" id="reminderTime" value="20:00" />
+          </div>
+          <div class="rs-preview" id="rsPreview">
+            <span class="rs-preview-icon">📱</span>
+            <div>
+              <strong>Preview message:</strong>
+              <p id="rsPreviewText">"💧 Did you log your water habits today?"</p>
+            </div>
+          </div>
+          <div class="rs-status" id="rsStatus"></div>
+          <button class="rs-save-btn" id="rsSaveBtn">Save Reminder Settings</button>
         </div>
       </div>
 

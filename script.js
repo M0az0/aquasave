@@ -5,12 +5,18 @@
 ══════════════════════════════════════════════════════════ */
 const CONFIG = {
   storageKeys: {
-    habits:      'aqua_habits',
-    lastUsage:   'aqua_last_usage',
-    pledge:      'aqua_pledge',
-    pledgeDate:  'aqua_pledge_date',
-    pledgeCount: 'aqua_pledge_count',
-    theme:       'aqua_theme',
+    habits:         'aqua_habits',
+    lastUsage:      'aqua_last_usage',
+    pledge:         'aqua_pledge',
+    pledgeDate:     'aqua_pledge_date',
+    pledgeCount:    'aqua_pledge_count',
+    theme:          'aqua_theme',
+    notifEnabled:   'aqua_notif_enabled',
+    notifTime:      'aqua_notif_time',
+    billPeople:     'aqua_bill_people',
+    lastBillResult: 'aqua_last_bill',
+    habitsToday:    'aqua_habits_today_date',
+    reminderDismissed: 'aqua_reminder_dismissed',
   },
 
   ecoTips: [
@@ -38,7 +44,34 @@ const CONFIG = {
 
   wasteRatePerSecond: 34722, // litres of household water wasted globally per second
 
-  // Carbon footprint constants
+  // Egypt official residential water tariff (EGP / m³)
+  waterTariff: [
+    { upTo: 10, rate: 0.65 },
+    { upTo: 20, rate: 1.60 },
+    { upTo: 30, rate: 2.25 },
+    { upTo: 40, rate: 2.75 },
+    { upTo: Infinity, rate: 3.15 },
+  ],
+  sewageMultiplier: 0.75,   // sewage = 75% of water bill
+  baseRateEGP: 0.65,        // EGP/m³ used for virtual water cost display
+
+  // Yearly savings equivalents (EGP price estimates in Egypt 2026)
+  yearlyEquivItems: [
+    { emoji: '🍚', label: 'kg of rice', egpPerUnit: 35 },
+    { emoji: '📚', label: 'school books', egpPerUnit: 120 },
+    { emoji: '🌐', label: 'months of internet', egpPerUnit: 400 },
+  ],
+
+  // Reminder messages (rotated daily by day-of-year index)
+  reminderMessages: [
+    '💧 Did you log your water habits today?',
+    '🌱 Have you completed your 6 daily water habits?',
+    '♻️ Remember: every drop you save changes lives!',
+    '🌊 Small habits, massive impact — check in today!',
+    '💡 Your daily actions support UN SDG 6. Keep going!',
+    '🚰 Don\'t forget: turn off the tap while brushing tonight!',
+    '🏆 Champions don\'t take days off — log your habits!',
+  ],
   carbon: {
     kgCo2PerM3:     0.298,   // Egypt/MENA grid — kg CO₂ per m³ treated & pumped
     carKgPerKm:     0.210,   // avg petrol car — kg CO₂ per km
@@ -69,6 +102,13 @@ const state = {
   lastCalculatedTotal: 0,
   usageChart: null,
   wasteTickerStart: Date.now(),
+
+  // Budget state
+  billPeople:    2,
+  billDailyL:    200,  // fallback if no calculator run yet
+  lastBillEGP:   0,    // current monthly total incl. sewage
+  lastBillSaveEGP: 0,  // after-20%-reduction monthly total
+  virtualCounts: { burger: 0, coffee: 0, tshirt: 0, phone: 0 },
 };
 
 // Load persisted state from localStorage
@@ -833,6 +873,433 @@ function setText(id, value) {
 
 
 /* ══════════════════════════════════════════════════════════
+   SMART WATER BUDGET — PART A: BILL ESTIMATOR
+══════════════════════════════════════════════════════════ */
+
+/**
+ * Calculates Egyptian tiered water bill (EGP) for a given monthly m³ volume.
+ * Returns { waterBill, sewageFee, total, tierBreakdown }
+ */
+function calcEgyptBill(m3) {
+  const tariff = CONFIG.waterTariff;
+  let remaining = m3;
+  let waterBill = 0;
+  let prevBand = 0;
+  const tierBreakdown = [];
+
+  for (const tier of tariff) {
+    if (remaining <= 0) break;
+    const bandSize   = tier.upTo === Infinity ? remaining : Math.min(remaining, tier.upTo - prevBand);
+    const bandCost   = bandSize * tier.rate;
+    const bandConsumed = Math.min(remaining, tier.upTo - prevBand);
+
+    if (bandConsumed > 0) {
+      tierBreakdown.push({
+        label: tier.upTo === Infinity
+          ? `>${prevBand} m³ @ ${tier.rate} EGP/m³`
+          : `${prevBand + 1}–${tier.upTo} m³ @ ${tier.rate} EGP/m³`,
+        consumed: bandConsumed,
+        cost: bandConsumed * tier.rate,
+        rate: tier.rate,
+        maxBand: tier.upTo === Infinity ? m3 : tier.upTo - prevBand,
+      });
+      waterBill += bandConsumed * tier.rate;
+      remaining -= bandConsumed;
+    }
+    prevBand = tier.upTo;
+  }
+
+  const sewageFee = waterBill * CONFIG.sewageMultiplier;
+  const total     = waterBill + sewageFee;
+
+  return {
+    waterBill: parseFloat(waterBill.toFixed(2)),
+    sewageFee: parseFloat(sewageFee.toFixed(2)),
+    total:     parseFloat(total.toFixed(2)),
+    tierBreakdown,
+  };
+}
+
+function initBillEstimator() {
+  // Load daily litres from localStorage (from calculator) or fallback
+  const saved = localStorage.getItem(CONFIG.storageKeys.lastUsage);
+  if (saved) {
+    const { total } = JSON.parse(saved);
+    state.billDailyL = total;
+  }
+
+  // Bill people stepper
+  const savedPeople = parseInt(localStorage.getItem(CONFIG.storageKeys.billPeople) || '2');
+  state.billPeople = savedPeople;
+  setText('billPeopleVal', savedPeople);
+
+  document.getElementById('billPeopleDown')?.addEventListener('click', () => {
+    if (state.billPeople > 1) {
+      state.billPeople--;
+      setText('billPeopleVal', state.billPeople);
+    }
+  });
+  document.getElementById('billPeopleUp')?.addEventListener('click', () => {
+    if (state.billPeople < 20) {
+      state.billPeople++;
+      setText('billPeopleVal', state.billPeople);
+    }
+  });
+
+  // Manual override
+  document.getElementById('billManualApply')?.addEventListener('click', () => {
+    const input = document.getElementById('billManualLitres');
+    const val = parseFloat(input?.value);
+    if (val && val > 0) {
+      state.billDailyL = val;
+      updateBillDailyDisplay();
+      showToast('✅ Manual daily usage applied — click <strong>Calculate My Bill</strong>.');
+    }
+  });
+
+  document.getElementById('billCalcBtn')?.addEventListener('click', runBillEstimator);
+
+  updateBillDailyDisplay();
+}
+
+function updateBillDailyDisplay() {
+  const el    = document.getElementById('billDailyDisplay');
+  const chip  = document.getElementById('billSourceChip');
+  const saved = localStorage.getItem(CONFIG.storageKeys.lastUsage);
+
+  if (el) el.textContent = `${state.billDailyL.toLocaleString()} L/day`;
+  if (chip) {
+    chip.textContent = saved ? '📊 From your calculator' : '📏 Default estimate (200L)';
+  }
+}
+
+function runBillEstimator() {
+  const m3Monthly     = (state.billDailyL / 1000) * 30;
+  const m3Save        = m3Monthly * 0.8;
+  const current       = calcEgyptBill(m3Monthly);
+  const after         = calcEgyptBill(m3Save);
+  const moneySaved    = parseFloat((current.total - after.total).toFixed(2));
+
+  state.lastBillEGP     = current.total;
+  state.lastBillSaveEGP = after.total;
+
+  // Persist for savings comparison tab
+  localStorage.setItem(CONFIG.storageKeys.lastBillResult, JSON.stringify({
+    current: current.total, after: after.total, moneySaved,
+    yearly: parseFloat((moneySaved * 12).toFixed(2)),
+    m3Monthly: parseFloat(m3Monthly.toFixed(2)),
+  }));
+
+  // Show results container
+  const resultsEl = document.getElementById('billResults');
+  if (resultsEl) resultsEl.classList.remove('hidden');
+
+  // m³ display
+  setText('billM3', m3Monthly.toFixed(1));
+
+  // Tier bars
+  renderTierBars(current.tierBreakdown, m3Monthly);
+
+  // Bill cards
+  setText('billCurrentTotal', `${current.total.toFixed(2)} EGP`);
+  const breakEl = document.getElementById('billCurrentBreak');
+  if (breakEl) {
+    breakEl.innerHTML = `Water: ${current.waterBill.toFixed(2)} EGP<br>Sewage (75%): ${current.sewageFee.toFixed(2)} EGP`;
+  }
+
+  setText('billSaveTotal', `${after.total.toFixed(2)} EGP`);
+  const badgeEl = document.getElementById('billSavingBadge');
+  if (badgeEl) badgeEl.textContent = `💰 You save ${moneySaved.toFixed(2)} EGP/month`;
+
+  // Update savings comparison tab
+  updateSavingsComparison();
+  showToast('💶 <strong>Bill calculated!</strong> Check the Savings tab for your yearly impact.');
+}
+
+function renderTierBars(tiers, totalM3) {
+  const container = document.getElementById('tierBars');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const tierColors = ['#2ecc71', '#38c5f5', '#f7c948', '#ff9f40', '#ff6b35'];
+
+  tiers.forEach((tier, i) => {
+    const pct = Math.min(100, (tier.consumed / Math.max(totalM3, 1)) * 100);
+    const row = document.createElement('div');
+    row.className = 'tier-row';
+    row.innerHTML = `
+      <div class="tier-row-label">
+        <span>${tier.label}</span>
+        <strong>${tier.consumed.toFixed(1)} m³ · ${tier.cost.toFixed(2)} EGP</strong>
+      </div>
+      <div class="tier-bar-track">
+        <div class="tier-bar-fill" style="background:${tierColors[i] || '#38c5f5'}"></div>
+      </div>
+    `;
+    container.appendChild(row);
+    setTimeout(() => {
+      row.querySelector('.tier-bar-fill').style.width = pct + '%';
+    }, 80 + i * 80);
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   SMART WATER BUDGET — PART B: VIRTUAL WATER COST
+══════════════════════════════════════════════════════════ */
+function initVirtualWater() {
+  const items = document.querySelectorAll('.virtual-item');
+
+  items.forEach(item => {
+    const key = item.dataset.item;
+    state.virtualCounts[key] = 0;
+    const countEl = item.querySelector('.vi-count');
+
+    item.querySelectorAll('.vi-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const dir = btn.dataset.dir === '+' ? 1 : -1;
+        state.virtualCounts[key] = Math.max(0, state.virtualCounts[key] + dir);
+        if (countEl) countEl.textContent = state.virtualCounts[key];
+        updateVirtualTotals();
+      });
+    });
+  });
+}
+
+function updateVirtualTotals() {
+  const items = document.querySelectorAll('.virtual-item');
+  let totalLitres = 0;
+
+  items.forEach(item => {
+    const key    = item.dataset.item;
+    const litres = parseInt(item.dataset.liters);
+    totalLitres += litres * (state.virtualCounts[key] || 0);
+  });
+
+  const m3     = totalLitres / 1000;
+  const egp    = m3 * CONFIG.baseRateEGP;
+
+  setText('vtLitres', `${totalLitres.toLocaleString()} L`);
+  setText('vtM3',     `${m3.toFixed(2)} m³`);
+  setText('vtEGP',    `${egp.toFixed(2)} EGP`);
+}
+
+/* ══════════════════════════════════════════════════════════
+   SMART WATER BUDGET — PART C: SAVINGS COMPARISON
+══════════════════════════════════════════════════════════ */
+function updateSavingsComparison() {
+  const saved = localStorage.getItem(CONFIG.storageKeys.lastBillResult);
+  if (!saved) return;
+
+  const { current, after, moneySaved, yearly } = JSON.parse(saved);
+
+  setText('scNow',  `${current.toFixed(2)} EGP`);
+  setText('scSave', `${moneySaved.toFixed(2)} EGP saved/month`);
+
+  const nowSub  = document.getElementById('scNowSub');
+  const saveSub = document.getElementById('scSaveSub');
+  if (nowSub)  nowSub.textContent  = `Your estimated monthly bill including sewage fees`;
+  if (saveSub) saveSub.textContent = `After reducing water use by 20% → ${after.toFixed(2)} EGP/month`;
+
+  // Yearly card
+  const yearlyCard = document.getElementById('yearlySavingCard');
+  const yearlyEl   = document.getElementById('ysAmount');
+  const equivEl    = document.getElementById('yearlyEquivs');
+
+  if (yearlyCard) yearlyCard.classList.remove('hidden');
+  if (yearlyEl)   yearlyEl.textContent = `${yearly.toFixed(2)}`;
+
+  if (equivEl && yearly > 0) {
+    equivEl.innerHTML = CONFIG.yearlyEquivItems.map(({ emoji, label, egpPerUnit }) => {
+      const qty = (yearly / egpPerUnit).toFixed(1);
+      return `
+        <div class="ye-item">
+          <span class="ye-emoji">${emoji}</span>
+          <span class="ye-amount">${qty}</span>
+          <span class="ye-label">${label}</span>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   BUDGET TABS
+══════════════════════════════════════════════════════════ */
+function initBudgetTabs() {
+  const tabs   = document.querySelectorAll('.budget-tab');
+  const panels = document.querySelectorAll('.budget-panel');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+
+      tabs.forEach(t   => t.classList.remove('active'));
+      panels.forEach(p => p.classList.add('hidden'));
+
+      tab.classList.add('active');
+      document.getElementById(`tab-${target}`)?.classList.remove('hidden');
+
+      // Refresh savings comparison when tab opened
+      if (target === 'savings') updateSavingsComparison();
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   SMART REMINDER NOTIFICATIONS
+══════════════════════════════════════════════════════════ */
+const reminderMessages = CONFIG.reminderMessages;
+
+/** Pick a consistent message for today (same all day, changes daily) */
+function getDailyMessage() {
+  const dayOfYear = Math.floor(
+    (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000
+  );
+  return reminderMessages[dayOfYear % reminderMessages.length];
+}
+
+function initReminderBanner() {
+  const banner    = document.getElementById('reminderBanner');
+  const closeBtn  = document.getElementById('reminderBannerClose');
+  const textEl    = document.getElementById('reminderBannerText');
+
+  if (!banner) return;
+
+  // Only show if: dismissed key not set today AND after 18:00 AND habits not all done
+  const today        = new Date().toDateString();
+  const dismissed    = localStorage.getItem(CONFIG.storageKeys.reminderDismissed);
+  const habitsToday  = localStorage.getItem(CONFIG.storageKeys.habitsToday);
+  const doneHabits   = JSON.parse(localStorage.getItem(CONFIG.storageKeys.habits) || '[]');
+  const hour         = new Date().getHours();
+  const allDone      = doneHabits.length === 6;
+
+  if (dismissed === today || allDone) return;
+  if (hour < 18) return;  // only show after 6 PM
+
+  if (textEl) textEl.textContent = getDailyMessage();
+  banner.classList.remove('hidden');
+
+  closeBtn?.addEventListener('click', () => {
+    banner.classList.add('hidden');
+    localStorage.setItem(CONFIG.storageKeys.reminderDismissed, today);
+  });
+}
+
+function initReminderSettings() {
+  const toggle     = document.getElementById('notifToggle');
+  const timeInput  = document.getElementById('reminderTime');
+  const saveBtn    = document.getElementById('rsSaveBtn');
+  const previewEl  = document.getElementById('rsPreviewText');
+  const statusEl   = document.getElementById('rsStatus');
+  const rsBody     = document.getElementById('rsBody');
+
+  if (!toggle) return;
+
+  // Restore saved state
+  const isEnabled   = localStorage.getItem(CONFIG.storageKeys.notifEnabled) === 'true';
+  const savedTime   = localStorage.getItem(CONFIG.storageKeys.notifTime) || '20:00';
+
+  toggle.checked      = isEnabled;
+  if (timeInput) timeInput.value = savedTime;
+  if (previewEl) previewEl.textContent = `"${getDailyMessage()}"`;
+
+  // Toggle animation — show/hide body
+  const toggleBody = () => {
+    if (rsBody) rsBody.style.opacity = toggle.checked ? '1' : '0.5';
+    if (timeInput) timeInput.disabled = !toggle.checked;
+  };
+  toggleBody();
+  toggle.addEventListener('change', toggleBody);
+
+  // Save button
+  saveBtn?.addEventListener('click', async () => {
+    const enabled = toggle.checked;
+    const time    = timeInput?.value || '20:00';
+
+    localStorage.setItem(CONFIG.storageKeys.notifEnabled, enabled);
+    localStorage.setItem(CONFIG.storageKeys.notifTime, time);
+
+    if (!enabled) {
+      setRsStatus('info', '🔕 Reminders disabled. You can re-enable them any time.', statusEl);
+      return;
+    }
+
+    // Check browser support
+    if (!('Notification' in window)) {
+      setRsStatus('error',
+        '⚠️ Your browser does not support notifications. Try Chrome or Edge on desktop for the best experience.',
+        statusEl);
+      return;
+    }
+
+    // Request permission
+    let permission = Notification.permission;
+    if (permission === 'default') {
+      permission = await Notification.requestPermission();
+    }
+
+    if (permission === 'granted') {
+      scheduleNotification(time);
+      setRsStatus('success',
+        `✅ Reminder set for ${formatTime12(time)} daily. Keep the page open or pin it for best results.`,
+        statusEl);
+      showToast(`🔔 <strong>Reminder saved!</strong> You'll be nudged at ${formatTime12(time)}.`);
+    } else if (permission === 'denied') {
+      setRsStatus('error',
+        '❌ Notification permission was denied. Please enable it in your browser settings → Site Settings → Notifications.',
+        statusEl);
+    } else {
+      setRsStatus('info', 'ℹ️ Permission not granted. Please try again or enable in browser settings.', statusEl);
+    }
+  });
+}
+
+function setRsStatus(type, message, el) {
+  if (!el) return;
+  el.className = `rs-status ${type}`;
+  el.textContent = message;
+}
+
+function formatTime12(time24) {
+  const [h, m] = time24.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const h12    = h % 12 || 12;
+  return `${h12}:${String(m).padStart(2, '0')} ${period}`;
+}
+
+/** Schedule a browser notification for the user's chosen time today (and recurring via setInterval) */
+function scheduleNotification(time) {
+  const [targetH, targetM] = time.split(':').map(Number);
+
+  function fireIfTime() {
+    const now = new Date();
+    if (now.getHours() === targetH && now.getMinutes() === targetM) {
+      const message = getDailyMessage();
+      const notif = new Notification('💧 AquaSave Reminder', {
+        body: message.replace(/^[^\s]+\s/, ''), // strip leading emoji
+        icon: 'https://em-content.zobj.net/source/apple/391/droplet_1f4a7.png',
+        tag:  'aquasave-daily',
+        requireInteraction: false,
+      });
+      notif.onclick = () => window.focus();
+    }
+  }
+
+  // Check every minute
+  setInterval(fireIfTime, 60000);
+  fireIfTime(); // run immediately in case user saved at exactly the right minute
+}
+
+/** Restore notification scheduling on page load if previously enabled */
+function restoreNotificationSchedule() {
+  const enabled = localStorage.getItem(CONFIG.storageKeys.notifEnabled) === 'true';
+  const time    = localStorage.getItem(CONFIG.storageKeys.notifTime) || '20:00';
+
+  if (!enabled || !('Notification' in window) || Notification.permission !== 'granted') return;
+  scheduleNotification(time);
+}
+
+/* ══════════════════════════════════════════════════════════
    EVENT BINDING — connects DOM events to logic
 ══════════════════════════════════════════════════════════ */
 function bindEvents() {
@@ -1016,6 +1483,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Impact
   initImpactCounters();
   initGlobalWasteTicker();
+
+  // Smart Water Budget
+  initBudgetTabs();
+  initBillEstimator();
+  initVirtualWater();
+
+  // Reminders
+  initReminderBanner();
+  initReminderSettings();
+  restoreNotificationSchedule();
 
   // Share card
   injectShareCardStyles();
