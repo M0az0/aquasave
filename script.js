@@ -131,6 +131,7 @@ function loadPersistedState() {
 function saveLastUsage(total) {
   localStorage.setItem(CONFIG.storageKeys.lastUsage, JSON.stringify({
     total,
+    people: state.people,   // ← store how many people the calculator used
     timestamp: Date.now(),
   }));
 }
@@ -921,11 +922,17 @@ function calcEgyptBill(m3) {
 }
 
 function initBillEstimator() {
-  // Load daily litres from localStorage (from calculator) or fallback
+  // Load from calculator: derive per-person daily litres
   const saved = localStorage.getItem(CONFIG.storageKeys.lastUsage);
   if (saved) {
-    const { total } = JSON.parse(saved);
-    state.billDailyL = total;
+    const { total, people } = JSON.parse(saved);
+    // store per-person so the people stepper scales correctly
+    state.billPerPersonL = Math.round(total / (people || 1));
+    state.billDailyL     = state.billPerPersonL; // display unit = per person
+  } else {
+    // fallback: 200 L/day per person
+    state.billPerPersonL = 200;
+    state.billDailyL     = 200;
   }
 
   // Bill people stepper
@@ -937,28 +944,30 @@ function initBillEstimator() {
     if (state.billPeople > 1) {
       state.billPeople--;
       setText('billPeopleVal', state.billPeople);
+      updateBillDailyDisplay();
     }
   });
   document.getElementById('billPeopleUp')?.addEventListener('click', () => {
-    if (state.billPeople < 20) {
+    if (state.billPeople < 30) {
       state.billPeople++;
       setText('billPeopleVal', state.billPeople);
+      updateBillDailyDisplay();
     }
   });
 
-  // Manual override
+  // Manual override — treated as per-person entry
   document.getElementById('billManualApply')?.addEventListener('click', () => {
     const input = document.getElementById('billManualLitres');
-    const val = parseFloat(input?.value);
+    const val   = parseFloat(input?.value);
     if (val && val > 0) {
-      state.billDailyL = val;
+      state.billPerPersonL = val;
+      state.billDailyL     = val;
       updateBillDailyDisplay();
-      showToast('✅ Manual daily usage applied — click <strong>Calculate My Bill</strong>.');
+      showToast('✅ Manual per-person usage applied — click <strong>Calculate My Bill</strong>.');
     }
   });
 
   document.getElementById('billCalcBtn')?.addEventListener('click', runBillEstimator);
-
   updateBillDailyDisplay();
 }
 
@@ -966,15 +975,26 @@ function updateBillDailyDisplay() {
   const el    = document.getElementById('billDailyDisplay');
   const chip  = document.getElementById('billSourceChip');
   const saved = localStorage.getItem(CONFIG.storageKeys.lastUsage);
+  const perPerson  = state.billPerPersonL || state.billDailyL;
+  const totalHouse = perPerson * state.billPeople;
 
-  if (el) el.textContent = `${state.billDailyL.toLocaleString()} L/day`;
+  if (el) {
+    el.innerHTML = `
+      <span style="color:var(--water-bright);font-family:'Syne',sans-serif;font-size:20px;font-weight:800">${perPerson} L/person/day</span>
+      <span style="font-size:12px;color:var(--text-muted);margin-left:8px">= ${totalHouse.toLocaleString()} L/day total (${state.billPeople} person${state.billPeople > 1 ? 's' : ''})</span>
+    `;
+  }
+
   if (chip) {
-    chip.textContent = saved ? '📊 From your calculator' : '📏 Default estimate (200L)';
+    chip.textContent = saved ? '📊 From your calculator' : '📏 Default estimate';
   }
 }
 
 function runBillEstimator() {
-  const m3Monthly     = (state.billDailyL / 1000) * 30;
+  // ← KEY FIX: multiply per-person daily litres by household size
+  const perPerson     = state.billPerPersonL || state.billDailyL;
+  const totalDailyL   = perPerson * state.billPeople;
+  const m3Monthly     = (totalDailyL / 1000) * 30;
   const m3Save        = m3Monthly * 0.8;
   const current       = calcEgyptBill(m3Monthly);
   const after         = calcEgyptBill(m3Save);
@@ -1001,13 +1021,13 @@ function runBillEstimator() {
   renderTierBars(current.tierBreakdown, m3Monthly);
 
   // Bill cards
-  setText('billCurrentTotal', `${current.total.toFixed(2)} EGP`);
+  setText('billCurrentTotal', current.total.toFixed(2));
   const breakEl = document.getElementById('billCurrentBreak');
   if (breakEl) {
     breakEl.innerHTML = `Water: ${current.waterBill.toFixed(2)} EGP<br>Sewage (75%): ${current.sewageFee.toFixed(2)} EGP`;
   }
 
-  setText('billSaveTotal', `${after.total.toFixed(2)} EGP`);
+  setText('billSaveTotal', after.total.toFixed(2));
   const badgeEl = document.getElementById('billSavingBadge');
   if (badgeEl) badgeEl.textContent = `💰 You save ${moneySaved.toFixed(2)} EGP/month`;
 

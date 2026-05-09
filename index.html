@@ -694,7 +694,7 @@
                 <span class="bill-source-chip" id="billSourceChip">
                   📊 From your calculator
                 </span>
-                <span class="bill-daily-display" id="billDailyDisplay">—</span>
+                <div class="bill-daily-display" id="billDailyDisplay">—</div>
               </div>
               <p class="field-hint">Pull from calculator or enter manually below</p>
               <div class="bill-manual-row">
@@ -711,7 +711,10 @@
             </div>
 
             <div class="bill-field">
-              <label>Household Size (for per-person view)</label>
+              <label>Household Size — number of people</label>
+              <p class="field-hint" style="margin-bottom:10px">
+                The bill is calculated as: <em>per-person usage × number of people</em>
+              </p>
               <div class="bill-people-row">
                 <button class="step-btn" id="billPeopleDown">−</button>
                 <span class="stepper-value" id="billPeopleVal">2</span>
@@ -743,14 +746,14 @@
               <div class="bill-card bill-card--current">
                 <span class="bill-card-label">Current Bill</span>
                 <strong class="bill-card-amount" id="billCurrentTotal">—</strong>
-                <span class="bill-card-sub">EGP / month (incl. sewage)</span>
+                <span class="bill-card-sub">per month · incl. sewage fees</span>
                 <div class="bill-card-breakdown" id="billCurrentBreak"></div>
               </div>
               <div class="bill-arrow">→</div>
               <div class="bill-card bill-card--save">
                 <span class="bill-card-label">After −20% Usage</span>
                 <strong class="bill-card-amount" id="billSaveTotal">—</strong>
-                <span class="bill-card-sub">EGP / month (incl. sewage)</span>
+                <span class="bill-card-sub">per month · incl. sewage fees</span>
                 <div class="bill-saving-badge" id="billSavingBadge"></div>
               </div>
             </div>

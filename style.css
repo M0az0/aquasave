@@ -2133,8 +2133,11 @@ strong { font-weight: 700; }
   padding: 4px 12px; border-radius: 100px;
 }
 .bill-daily-display {
-  font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800;
-  color: var(--water-bright);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
 }
 .bill-manual-row {
   display: flex; align-items: center; gap: 10px; margin-top: 8px;
@@ -2210,8 +2213,23 @@ strong { font-weight: 700; }
   text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;
 }
 .bill-card-amount {
-  display: block; font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800;
-  color: var(--warn); margin-bottom: 4px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  font-family: 'Syne', sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--warn);
+  margin-bottom: 4px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.bill-card-amount::after {
+  content: 'EGP';
+  font-size: 18px;
+  font-weight: 600;
+  opacity: 0.85;
 }
 .bill-card--save .bill-card-amount { color: var(--success); }
 .bill-card-sub { font-size: 11px; color: var(--text-muted); }
